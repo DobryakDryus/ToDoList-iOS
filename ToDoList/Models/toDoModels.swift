@@ -281,19 +281,4 @@ final class FileCache {
     }
     
 }
-
-//var dictJson: [String: Any]  = ["id": "4",
-//                                "text": "String",
-//                                "importance": "common",
-//                                "completeStatus": true,
-//                                "createdAt": 1234.0]
-//
-//let csvStr = "4;String;;;true;1234.0;"
-//let item = ToDoItem.parse(csv: csvStr)
-//print(item)
-//let list = FileCache.init(list: [item!])
-//
-//
-//list.loadFromCsvFile(withPath: "/Users/dobryak_drus/Documents/ToDoList.csv")
-//print(list.listToDoItem)
     
