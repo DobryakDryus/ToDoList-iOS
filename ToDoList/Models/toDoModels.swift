@@ -2,15 +2,10 @@
 //  toDoModels.swift
 //  ToDoList
 //
-//  Created by Andrey Oleynik on 16.06.2023.
 //
 
 import Foundation
 
-//
-//  main.swift
-//  DZ1
-//
 
 enum Importance: String {
     case important = "important"
@@ -51,7 +46,7 @@ extension ToDoItem {
         dect["id"] = self.id
         dect["text"] = self.text
         if self.importance != Importance.common {
-            dect["importance"] = self.importance
+            dect["importance"] = self.importance.rawValue
         }
         if self.deadline != nil {
             dect["deadline"] = self.deadline?.timeIntervalSince1970
@@ -103,18 +98,14 @@ extension ToDoItem {
 }
 
 extension ToDoItem {
-    // computed variable that generates csv string with pattern
+    // computed variable that generates csv string with pattern:
     // "id;text;importance;deadline;completeStatus;createdAt;changedAt"
     var csv: String {
         var csvString = ""
         csvString.append(contentsOf: "\(self.id);")
-//        if self.text.contains(";") {
-//            csvString.append("\"")
-//        }
+
         csvString.append(contentsOf: "\(self.text)")
-//        if self.text.contains(";") {
-//            csvString.append("\"")
-//        }
+
         csvString.append(contentsOf: ";\(self.importance != Importance.common ? self.importance.rawValue : "");")
         if let deadlineStr = self.deadline {
             csvString.append(contentsOf: String(deadlineStr.timeIntervalSince1970))
@@ -127,12 +118,12 @@ extension ToDoItem {
         return csvString
     }
     
+    //Help function that splits csv string to components
    private static func concatToCsvComponents(with: String) -> [String] {
         let csvArray = Array(with)
         var csvComponents: [String] = []
         var indexComponent = 0, temp = ""
-       csvArray.forEach { char in
-//        for char in csvArray {
+        csvArray.forEach { char in
             if char == ";" {
                 csvComponents.append(temp)
                 temp = ""
@@ -146,7 +137,7 @@ extension ToDoItem {
     }
     
     // Separator: ";"
-    // "id;text;importance;deadline;completeStatus;createdAt;changedAt"
+    // Pattern: "id;text;importance;deadline;completeStatus;createdAt;changedAt"
     static func parse(csv: String) -> ToDoItem? {
         guard csv.filter({$0 == ";"}).count == 6 else {
             return nil
@@ -177,8 +168,8 @@ extension ToDoItem {
         }
         
         var changedAt: Date?
-        if let deadlineDouble = Double(csvComponents[6]) {
-            changedAt = Date(timeIntervalSince1970: deadlineDouble)
+        if let changedDouble = Double(csvComponents[6]) {
+            changedAt = Date(timeIntervalSince1970: changedDouble)
         }
         
         let item = ToDoItem.init(id: id, text: text, importance: importance, deadline: deadline, completeStatus: completeStatus, createdAt: createdAt, changedAt: changedAt)
@@ -202,6 +193,7 @@ final class FileCache {
         self.listToDoItem.removeAll { $0.id == id }
     }
     
+    // Help function that returns File URL to save
     private func getFileURL(withPath: String) -> URL? {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil
