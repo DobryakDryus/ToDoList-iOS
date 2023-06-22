@@ -19,6 +19,8 @@
 		CDB57DDE2A41FDC3002C7A56 /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB57DDC2A41FDC3002C7A56 /* ToDoItem.swift */; };
 		CDB57DE02A41FFE0002C7A56 /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB57DDF2A41FFDE002C7A56 /* FileCache.swift */; };
 		CDB57DE12A41FFE0002C7A56 /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB57DDF2A41FFDE002C7A56 /* FileCache.swift */; };
+		CDC7D7A82A44F439001CAAC4 /* ItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC7D7A72A44F439001CAAC4 /* ItemViewController.swift */; };
+		CDC7D7A92A44F439001CAAC4 /* ItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC7D7A72A44F439001CAAC4 /* ItemViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,7 @@
 		CDB57DCE2A41FD4C002C7A56 /* ToDoListUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CDB57DDC2A41FDC3002C7A56 /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		CDB57DDF2A41FFDE002C7A56 /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
+		CDC7D7A72A44F439001CAAC4 /* ItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +113,7 @@
 				CDB57DB42A41FD4B002C7A56 /* Assets.xcassets */,
 				CDB57DB62A41FD4B002C7A56 /* LaunchScreen.storyboard */,
 				CDB57DB92A41FD4B002C7A56 /* Info.plist */,
+				CDC7D7A72A44F439001CAAC4 /* ItemViewController.swift */,
 			);
 			path = ToDoList;
 			sourceTree = "<group>";
@@ -275,6 +279,7 @@
 				CDB57DAC2A41FD42002C7A56 /* AppDelegate.swift in Sources */,
 				CDB57DE02A41FFE0002C7A56 /* FileCache.swift in Sources */,
 				CDB57DAE2A41FD42002C7A56 /* SceneDelegate.swift in Sources */,
+				CDC7D7A82A44F439001CAAC4 /* ItemViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDB57DC32A41FD4C002C7A56 /* ToDoListTests.swift in Sources */,
+				CDC7D7A92A44F439001CAAC4 /* ItemViewController.swift in Sources */,
 				CDB57DE12A41FFE0002C7A56 /* FileCache.swift in Sources */,
 				CDB57DDE2A41FDC3002C7A56 /* ToDoItem.swift in Sources */,
 			);
