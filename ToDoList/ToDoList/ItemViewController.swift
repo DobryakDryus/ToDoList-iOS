@@ -19,13 +19,20 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         stackContentView.addArrangedSubview(textViewItem)
         stackContentView.addArrangedSubview(itemStackView)
         itemStackView.addArrangedSubview(firstCellStackView)
+        firstCellStackView.addArrangedSubview(importanceLabel)
+        firstCellStackView.addArrangedSubview(importanceControl)
         itemStackView.addArrangedSubview(separatorView)
         itemStackView.addArrangedSubview(secondCellStackView)
+        secondCellStackView.addArrangedSubview(stackWithDate)
+        stackWithDate.addArrangedSubview(deadlineLabel)
+        stackWithDate.addArrangedSubview(deadlineDateButton)
+        stackWithDate.sendSubviewToBack(deadlineDateButton)
+        secondCellStackView.addArrangedSubview(switchCase)
+//        secondCellStackView.addArrangedSubview(<#T##view: UIView##UIView#>)
         itemStackView.addArrangedSubview(secondSeparatorView)
         itemStackView.addArrangedSubview(calendarView)
         stackContentView.addArrangedSubview(deleteButton)
-//        stackContentView.addArrangedSubview(deleteButton)
-
+        
         setUpTaskViewConstraints()
     }
     
@@ -70,14 +77,14 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     private lazy var secondSeparatorView: UIView =  {
         let separatorView = UIView()
         separatorView.backgroundColor = .gray
-        
+        separatorView.isHidden = true
         return separatorView
     }()
     
     private lazy var firstCellStackView: UIStackView = {
        let firstCellStackView = UIStackView()
         firstCellStackView.axis = .horizontal
-        firstCellStackView.distribution = .fill
+//        firstCellStackView.distribution = .fillEqually
         firstCellStackView.alignment = .center
        return firstCellStackView
     }()
@@ -90,11 +97,101 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         return importanceLabel
     }()
     
+    private lazy var importanceControl: UISegmentedControl = {
+        let importanceControl = UISegmentedControl(items: ["↓", "нет", "‼️"])
+        importanceControl.selectedSegmentIndex = 1
+        importanceControl.setWidth(49, forSegmentAt: 0)
+        importanceControl.setWidth(49, forSegmentAt: 1)
+        importanceControl.setWidth(49, forSegmentAt: 2)
+        
+        
+        return importanceControl
+    }()
+    
     private lazy var secondCellStackView: UIStackView = {
        let secondCellStackView = UIStackView()
-//       secondCellStackView.isHidden = true
+        secondCellStackView.axis = .horizontal
+        secondCellStackView.distribution = .fill
+        secondCellStackView.alignment = .center
        return secondCellStackView
     }()
+    
+    private lazy var stackWithDate: UIStackView = {
+        let stackWithDate = UIStackView()
+        stackWithDate.axis = .vertical
+        stackWithDate.distribution = .fill
+        stackWithDate.alignment = .leading
+        stackWithDate.spacing = 2
+        stackWithDate.translatesAutoresizingMaskIntoConstraints = false
+        return stackWithDate
+    }()
+    
+    private lazy var deadlineLabel: UILabel = {
+        let deadlineLabel = UILabel()
+        deadlineLabel.text = "Сделать до"
+        return deadlineLabel
+    }()
+    
+    private lazy var deadlineDateButton: UIButton = {
+        
+        let deadlineDateButton = UIButton(type: .system)
+        let dateForm = DateFormatter()
+        dateForm.setLocalizedDateFormatFromTemplate("d MMMM yyyy")
+        let nextDay = Date().addingTimeInterval(3600*24)
+        let nextDayString = dateForm.string(from: nextDay)
+        deadlineDateButton.setTitle(nextDayString, for: .normal)
+        deadlineDateButton.setTitleColor(.systemBlue , for: .normal)
+        deadlineDateButton.addTarget(self, action: #selector(interactWithCalendar), for: .touchUpInside)
+        
+        deadlineDateButton.isHidden = true
+        
+        return deadlineDateButton
+    }()
+    
+    @objc func interactWithCalendar() {
+        if calendarView.isHidden {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+                self.secondSeparatorView.alpha = 1
+                self.secondSeparatorView.isHidden = false
+            })
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations:{
+                self.secondSeparatorView.alpha = 1
+                self.calendarView.isHidden = false
+            })
+        } else {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
+                self.secondSeparatorView.alpha = 0
+                self.secondSeparatorView.isHidden = true
+            } completion: { _ in
+                self.secondSeparatorView.alpha = 1
+            }
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
+                self.calendarView.alpha = 0
+                self.calendarView.isHidden = true
+            } completion: { _ in
+                self.calendarView.alpha = 1
+            }
+        }
+    }
+    
+    private lazy var switchCase: UISwitch = {
+        let switchCase = UISwitch()
+        switchCase.isOn = false
+        switchCase.addTarget(self, action: #selector(switchToggled(_:)), for: .valueChanged)
+        
+        return switchCase
+    }()
+    
+    @objc func switchToggled(_ sender: UISwitch! ) {
+        if sender.isOn {
+            deadlineDateButton.isHidden = false
+        } else {
+            deadlineDateButton.isHidden = true
+            if !calendarView.isHidden {
+                interactWithCalendar()
+            }
+        }
+    }
     
     private lazy var calendarView: UIDatePicker = {
         let calendarView = UIDatePicker()
@@ -102,9 +199,22 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         calendarView.date = Date().addingTimeInterval(3600*24)
         calendarView.preferredDatePickerStyle = .inline
         calendarView.minimumDate = Date()
-        calendarView.isHidden = false
+        calendarView.isHidden = true
+        
+        
+        calendarView.addTarget(self, action: #selector(changeDateTapped(_:)), for: .valueChanged )
+        
         return calendarView
     }()
+    
+    @objc func changeDateTapped(_ sender: UIDatePicker!) {
+        let newDate = sender.date
+        let dateForm = DateFormatter()
+        dateForm.setLocalizedDateFormatFromTemplate("d MMMM yyyy")
+        let newDateString = dateForm.string(from: newDate)
+        deadlineDateButton.setTitle(newDateString, for: .normal)
+        interactWithCalendar()
+    }
     
     private lazy var deleteButton: UIButton = {
         let deleteButton = UIButton(type: .system)
@@ -120,8 +230,6 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     @objc func myDeleteButtonTapped(_ sender: UIButton!) {
         print("Ты потрясающий")
     }
-    
-
     
     private func setUpNavBar() {
         title = "Дело"
@@ -196,8 +304,10 @@ extension ToDoTaskViewController {
         setUpTextViewItemConstraints()
         setUpItemStackViewConstraints()
         setUpStackFirstCellConstaints()
+        setUpImportanceControlConstraints()
         setUpSeparatorCellConstraints()
         setUpStackSecondCellConstaints()
+        setUpStackViewDateConstraints()
         setUpSecondSeparatorCellConstraints()
         setUpCalendarViewConstraints()
         setUpDeleteButtonConstraints()
@@ -229,7 +339,7 @@ extension ToDoTaskViewController {
         itemStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            itemStackView.topAnchor.constraint(equalTo: textViewItem.bottomAnchor, constant: 16),
+//            itemStackView.topAnchor.constraint(equalTo: textViewItem.bottomAnchor, constant: 16),
             itemStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
             itemStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
         ])
@@ -240,8 +350,18 @@ extension ToDoTaskViewController {
         
         NSLayoutConstraint.activate([
             firstCellStackView.heightAnchor.constraint(equalToConstant: 56),
-            firstCellStackView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor),
-            firstCellStackView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor)
+            firstCellStackView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor, constant: 16),
+            firstCellStackView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor, constant: -16)
+        ])
+    }
+    
+    private func setUpImportanceControlConstraints() {
+        importanceControl.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            importanceControl.topAnchor.constraint(equalTo: firstCellStackView.topAnchor, constant: 10),
+            importanceControl.bottomAnchor.constraint(equalTo: firstCellStackView.bottomAnchor, constant: -10),
+            importanceControl.rightAnchor.constraint(equalTo: firstCellStackView.rightAnchor)
         ])
     }
     
@@ -260,8 +380,18 @@ extension ToDoTaskViewController {
         
         NSLayoutConstraint.activate([
             secondCellStackView.heightAnchor.constraint(equalToConstant: 56),
-            secondCellStackView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor),
-            secondCellStackView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor)
+            secondCellStackView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor, constant: 16),
+            secondCellStackView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor, constant: -16)
+        ])
+    }
+    
+    private func setUpStackViewDateConstraints() {
+        stackWithDate.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            stackWithDate.leftAnchor.constraint(equalTo: secondCellStackView.leftAnchor),
+            stackWithDate.topAnchor.constraint(equalTo: secondCellStackView.topAnchor, constant: 8),
+            stackWithDate.bottomAnchor.constraint(equalTo: secondCellStackView.bottomAnchor, constant: -8)
         ])
     }
 
@@ -281,7 +411,6 @@ extension ToDoTaskViewController {
         NSLayoutConstraint.activate([
             calendarView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor, constant: 16),
             calendarView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor, constant: -16),
-//            calendarView.heightAnchor.constraint(equalToConstant: 332)
         ])
     }
     
@@ -296,20 +425,9 @@ extension ToDoTaskViewController {
                 deleteButton.heightAnchor.constraint(equalToConstant: 56),
                 deleteButton.topAnchor.constraint(equalTo: itemStackView.bottomAnchor, constant: 16),
                 deleteButton.widthAnchor.constraint(equalToConstant: view.frame.size.width - 32),
-//                deleteButton.bottomAnchor.constraint(equalTo: textViewItem.bottomAnchor)
             ])
         }
     
-//    private func setUpContentViewConstraints() {
-//        contentView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        NSLayoutConstraint.activate([
-//            contentView.topAnchor.constraint(equalTo: view.topAnchor),
-//            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//            contentView.rightAnchor.constraint(equalTo: view.rightAnchor),
-//            contentView.leftAnchor.constraint(equalTo: view.leftAnchor)
-//        ])
-//    }
     
     private func setUpTextViewItemConstraints() {
         textViewItem.translatesAutoresizingMaskIntoConstraints = false
