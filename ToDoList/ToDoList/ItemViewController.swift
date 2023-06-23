@@ -16,6 +16,13 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         setUpNavBar()
         view.addSubview(taskScrollView)
         taskScrollView.addSubview(textViewItem)
+        taskScrollView.addSubview(itemStackView)
+        itemStackView.addArrangedSubview(firstCellStackView)
+        itemStackView.addArrangedSubview(separatorView)
+        itemStackView.addArrangedSubview(secondCellStackView)
+        itemStackView.addArrangedSubview(secondSeparatorView)
+        itemStackView.addArrangedSubview(calendarView)
+        taskScrollView.addSubview(deleteButton)
         setUpTaskViewConstraints()
     }
     
@@ -28,11 +35,79 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         return scrollView
     }()
     
-//    private lazy var contentView: UIView = {
-//        let contentView = UIView()
-//
-//        return contentView
-//    }()
+    private lazy var itemStackView: UIStackView = {
+        let itemStackView = UIStackView()
+        itemStackView.axis = .vertical
+        itemStackView.distribution = .fill
+        itemStackView.alignment = .center
+        itemStackView.layer.cornerRadius = 16
+        itemStackView.spacing = 0
+        itemStackView.backgroundColor = .white
+        
+        return itemStackView
+    }()
+    
+    private lazy var separatorView: UIView =  {
+        let separatorView = UIView()
+        separatorView.backgroundColor = .gray
+        
+        return separatorView
+    }()
+    
+    private lazy var secondSeparatorView: UIView =  {
+        let separatorView = UIView()
+        separatorView.backgroundColor = .gray
+        
+        return separatorView
+    }()
+    
+    private lazy var firstCellStackView: UIStackView = {
+       let firstCellStackView = UIStackView()
+        firstCellStackView.axis = .horizontal
+        firstCellStackView.distribution = .fill
+        firstCellStackView.alignment = .center
+       return firstCellStackView
+    }()
+    
+    private lazy var importanceLabel: UILabel = {
+        let importanceLabel = UILabel()
+        importanceLabel.text = "Важность"
+        importanceLabel.textColor = .black
+        
+        return importanceLabel
+    }()
+    
+    private lazy var secondCellStackView: UIStackView = {
+       let secondCellStackView = UIStackView()
+//       secondCellStackView.isHidden = true
+       return secondCellStackView
+    }()
+    
+    private lazy var calendarView: UIDatePicker = {
+        let calendarView = UIDatePicker()
+        calendarView.datePickerMode = .date
+        calendarView.date = Date().addingTimeInterval(3600*24)
+        calendarView.preferredDatePickerStyle = .inline
+        calendarView.minimumDate = Date()
+        calendarView.isHidden = false
+        return calendarView
+    }()
+    
+    private lazy var deleteButton: UIButton = {
+        let deleteButton = UIButton(type: .system)
+        deleteButton.setTitle("Удалить", for: .normal)
+        deleteButton.setTitleColor(.systemRed, for: .normal)
+        deleteButton.backgroundColor = .white
+        deleteButton.layer.cornerRadius = 16
+        deleteButton.addTarget(self, action: #selector(myDeleteButtonTapped(_:)), for: .touchUpInside)
+
+        return deleteButton
+    }()
+
+    @objc func myDeleteButtonTapped(_ sender: UIButton!) {
+        print("Ты потрясающий")
+    }
+    
 
     
     private func setUpNavBar() {
@@ -57,14 +132,23 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
             textViewItem.layer.cornerRadius = 12
             textViewItem.isScrollEnabled = false
             textViewItem.delegate = self
+            
+//            let tapEndEditing = UITapGestureRecognizer(target: self, action: #selector(endEditing))
+//            self.view.addGestureRecognizer(tapEndEditing)
+//
             return textViewItem
         }()
+    
+//        @objc func endEditing() {
+//            textViewItem.resignFirstResponder()
+//        }
     
         func textViewDidBeginEditing(_ textView: UITextView) {
             if textView.textColor == .lightGray {
                 textView.text = nil
                 textView.textColor = .black
             }
+            textView.becomeFirstResponder()
         }
     
     
@@ -72,7 +156,11 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
             if textView.text.isEmpty {
                 textView.text = "Что надо сделать?"
                 textView.textColor = .lightGray
+                self.navigationItem.rightBarButtonItem?.isEnabled = false
+            } else {
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
+            textView.resignFirstResponder()
         }
     
     @objc func myRightSideTaskNavigationBarButtonItemTapped(_ sender:UIBarButtonItem!)
@@ -92,7 +180,13 @@ extension ToDoTaskViewController {
     private func setUpTaskViewConstraints() {
         setUpTaskScrollViewConstraints()
         setUpTextViewItemConstraints()
-//        setUpDeleteButtonConstraints()
+        setUpItemStackViewConstraints()
+        setUpStackFirstCellConstaints()
+        setUpSeparatorCellConstraints()
+        setUpStackSecondCellConstaints()
+        setUpSecondSeparatorCellConstraints()
+        setUpCalendarViewConstraints()
+        setUpDeleteButtonConstraints()
     }
 
     private func setUpTaskScrollViewConstraints() {
@@ -105,6 +199,81 @@ extension ToDoTaskViewController {
             taskScrollView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
     }
+    
+    private func setUpItemStackViewConstraints() {
+        itemStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            itemStackView.topAnchor.constraint(equalTo: textViewItem.bottomAnchor, constant: 16),
+            itemStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            itemStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
+        ])
+    }
+    
+    private func setUpStackFirstCellConstaints() {
+        firstCellStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            firstCellStackView.heightAnchor.constraint(equalToConstant: 56),
+            firstCellStackView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor),
+            firstCellStackView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor)
+        ])
+    }
+    
+    private func setUpSeparatorCellConstraints() {
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+            separatorView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor, constant: 16),
+            separatorView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor, constant: -16)
+        ])
+    }
+    
+    private func setUpStackSecondCellConstaints() {
+        secondCellStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            secondCellStackView.heightAnchor.constraint(equalToConstant: 56),
+            secondCellStackView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor),
+            secondCellStackView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor)
+        ])
+    }
+
+    private func setUpSecondSeparatorCellConstraints() {
+        secondSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            secondSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+            secondSeparatorView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor, constant: 16),
+            secondSeparatorView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor, constant: -16)
+        ])
+    }
+    
+    private func setUpCalendarViewConstraints() {
+        calendarView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            calendarView.leftAnchor.constraint(equalTo: itemStackView.leftAnchor, constant: 16),
+            calendarView.rightAnchor.constraint(equalTo: itemStackView.rightAnchor, constant: -16),
+//            calendarView.heightAnchor.constraint(equalToConstant: 332)
+        ])
+    }
+    
+    
+        private func setUpDeleteButtonConstraints() {
+            deleteButton.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                deleteButton.leftAnchor.constraint(equalTo: taskScrollView.leftAnchor, constant: 16),
+                deleteButton.rightAnchor.constraint(equalTo: taskScrollView.rightAnchor,
+                                                   constant: -16),
+                deleteButton.heightAnchor.constraint(equalToConstant: 56),
+                deleteButton.topAnchor.constraint(equalTo: itemStackView.bottomAnchor, constant: 16),
+                deleteButton.widthAnchor.constraint(equalToConstant: view.frame.size.width - 32),
+//                deleteButton.bottomAnchor.constraint(equalTo: textViewItem.bottomAnchor)
+            ])
+        }
     
 //    private func setUpContentViewConstraints() {
 //        contentView.translatesAutoresizingMaskIntoConstraints = false
