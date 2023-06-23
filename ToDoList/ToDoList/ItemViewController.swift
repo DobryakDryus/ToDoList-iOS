@@ -15,14 +15,17 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         view.backgroundColor = .systemPurple
         setUpNavBar()
         view.addSubview(taskScrollView)
-        taskScrollView.addSubview(textViewItem)
-        taskScrollView.addSubview(itemStackView)
+        taskScrollView.addSubview(stackContentView)
+        stackContentView.addArrangedSubview(textViewItem)
+        stackContentView.addArrangedSubview(itemStackView)
         itemStackView.addArrangedSubview(firstCellStackView)
         itemStackView.addArrangedSubview(separatorView)
         itemStackView.addArrangedSubview(secondCellStackView)
         itemStackView.addArrangedSubview(secondSeparatorView)
         itemStackView.addArrangedSubview(calendarView)
-        taskScrollView.addSubview(deleteButton)
+        stackContentView.addArrangedSubview(deleteButton)
+//        stackContentView.addArrangedSubview(deleteButton)
+
         setUpTaskViewConstraints()
     }
     
@@ -33,6 +36,16 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         scrollView.isScrollEnabled = true
         scrollView.contentSize = CGSize(width: view.frame.size.width, height: view.frame.size.height)
         return scrollView
+    }()
+    
+    private lazy var stackContentView: UIStackView = {
+        let stackContentView = UIStackView()
+        stackContentView.axis = .vertical
+        stackContentView.distribution = .fill
+        stackContentView.alignment = .center
+        stackContentView.spacing = 16
+        
+        return stackContentView
     }()
     
     private lazy var itemStackView: UIStackView = {
@@ -179,6 +192,7 @@ extension ToDoTaskViewController {
 
     private func setUpTaskViewConstraints() {
         setUpTaskScrollViewConstraints()
+        setUpStackContentViewConstraints()
         setUpTextViewItemConstraints()
         setUpItemStackViewConstraints()
         setUpStackFirstCellConstaints()
@@ -197,6 +211,17 @@ extension ToDoTaskViewController {
             taskScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             taskScrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
             taskScrollView.rightAnchor.constraint(equalTo: view.rightAnchor)
+        ])
+    }
+    
+    private func setUpStackContentViewConstraints() {
+        stackContentView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            stackContentView.topAnchor.constraint(equalTo: taskScrollView.topAnchor),
+            stackContentView.bottomAnchor.constraint(equalTo: taskScrollView.bottomAnchor),
+            stackContentView.leftAnchor.constraint(equalTo: taskScrollView.leftAnchor),
+            stackContentView.rightAnchor.constraint(equalTo: taskScrollView.rightAnchor)
         ])
     }
     
@@ -265,8 +290,8 @@ extension ToDoTaskViewController {
             deleteButton.translatesAutoresizingMaskIntoConstraints = false
             
             NSLayoutConstraint.activate([
-                deleteButton.leftAnchor.constraint(equalTo: taskScrollView.leftAnchor, constant: 16),
-                deleteButton.rightAnchor.constraint(equalTo: taskScrollView.rightAnchor,
+                deleteButton.leftAnchor.constraint(equalTo: stackContentView.leftAnchor, constant: 16),
+                deleteButton.rightAnchor.constraint(equalTo: stackContentView.rightAnchor,
                                                    constant: -16),
                 deleteButton.heightAnchor.constraint(equalToConstant: 56),
                 deleteButton.topAnchor.constraint(equalTo: itemStackView.bottomAnchor, constant: 16),
