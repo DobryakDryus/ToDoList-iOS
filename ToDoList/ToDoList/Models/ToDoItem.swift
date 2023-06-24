@@ -1,7 +1,8 @@
 //
-//  toDoModels.swift
+//  ToDoItem.swift
 //  ToDoList
 //
+//  Created by Andrey Oleynik on 20.06.2023.
 //
 
 import Foundation
@@ -73,6 +74,7 @@ extension ToDoItem {
         
         let importanceStr = jsonDict["importance"] as? String
         var importance: Importance
+        
         switch importanceStr {
             case Importance.important.rawValue: importance = Importance.important
             case Importance.unimportant.rawValue: importance = Importance.unimportant
@@ -91,7 +93,13 @@ extension ToDoItem {
             changedAt = Date(timeIntervalSince1970: changedAtNumber)
         }
         
-        let item = ToDoItem.init(id: id, text: text, importance: importance, deadline: deadline, completeStatus: completeStatus, createdAt: createdAt, changedAt: changedAt)
+        let item = ToDoItem.init(id: id,
+                                 text: text,
+                                 importance: importance,
+                                 deadline: deadline,
+                                 completeStatus: completeStatus,
+                                 createdAt: createdAt,
+                                 changedAt: changedAt)
         
         return item
     }
@@ -100,6 +108,16 @@ extension ToDoItem {
 extension ToDoItem {
     // computed variable that generates csv string with pattern:
     // "id;text;importance;deadline;completeStatus;createdAt;changedAt"
+    private enum Keys: Int {
+        case id = 0
+        case text = 1
+        case importance = 2
+        case deadline = 3
+        case completeStatus = 4
+        case createdAt = 5
+        case changedAt = 6
+    }
+    
     var csv: String {
         var csvString = ""
         csvString.append(contentsOf: "\(self.id);")
@@ -144,18 +162,18 @@ extension ToDoItem {
         }
         
         let csvComponents = concatToCsvComponents(with: csv)
-        let text = csvComponents[1]
-        let id: String? = csvComponents[0] != "" ? csvComponents[0] : nil
+        let text = csvComponents[Keys.text.rawValue]
+        let id: String? = csvComponents[Keys.id.rawValue] != "" ? csvComponents[Keys.id.rawValue] : nil
         guard let id = id,
-              let completeStatus = Bool(csvComponents[4]),
-              let createdAtDouble = Double(csvComponents[5]),
+              let completeStatus = Bool(csvComponents[Keys.completeStatus.rawValue]),
+              let createdAtDouble = Double(csvComponents[Keys.createdAt.rawValue]),
               text != ""  else {
                  return nil
               }
         
         let createdAt = Date(timeIntervalSince1970: createdAtDouble)
         var importance: Importance
-        let importanceStr = csvComponents[2]
+        let importanceStr = csvComponents[Keys.importance.rawValue]
         switch importanceStr {
             case Importance.important.rawValue: importance = Importance.important
             case Importance.unimportant.rawValue: importance = Importance.unimportant
@@ -163,12 +181,12 @@ extension ToDoItem {
         }
         
         var deadline: Date?
-        if let deadlineDouble = Double(csvComponents[3]) {
+        if let deadlineDouble = Double(csvComponents[Keys.deadline.rawValue]) {
             deadline = Date(timeIntervalSince1970: deadlineDouble)
         }
         
         var changedAt: Date?
-        if let changedDouble = Double(csvComponents[6]) {
+        if let changedDouble = Double(csvComponents[Keys.changedAt.rawValue]) {
             changedAt = Date(timeIntervalSince1970: changedDouble)
         }
         
@@ -177,108 +195,3 @@ extension ToDoItem {
         return item
     }
 }
-
-final class FileCache {
-    private(set) var listToDoItem: [ToDoItem]
-    
-    func addItemToList(item: ToDoItem) {
-        guard let index = listToDoItem.firstIndex(where: { $0.id == item.id } ) else {
-            listToDoItem.append(item)
-            return
-        }
-        listToDoItem[index] = item
-    }
-    
-    func removeFromList(id: String) {
-        self.listToDoItem.removeAll { $0.id == id }
-    }
-    
-    // Help function that returns File URL to save
-    private func getFileURL(withPath: String) -> URL? {
-        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        let pathWithFilename = documentDirectory.appendingPathComponent(withPath)
-        return pathWithFilename
-    }
-    
-    func saveToFile(withPath: String = "ToDoList.json") {
-        guard let fileURL = getFileURL(withPath: withPath) else {
-            return
-        }
-        var jsonArr = Array<Any>()
-        for item in self.listToDoItem {
-            jsonArr.append(item.json)
-        }
-        if let jsonData = try? JSONSerialization.data(withJSONObject: jsonArr, options: .prettyPrinted) {
-            
-            do {
-                try jsonData.write(to: fileURL)
-                print("Успешно записан в файл!")
-            } catch {
-                print("Ошибка")
-            }
-        
-        }
-    }
-    
-    func saveToCsvFile(withPath: String = "ToDoList.csv") {
-        guard let fileURL = getFileURL(withPath: withPath) else {
-            return
-        }
-        var stringToSave = "id;text;importance;deadline;completeStatus;createdAt;changedAt\n"
-        for (index, item) in self.listToDoItem.enumerated() {
-            stringToSave.append(contentsOf: item.csv)
-            if index != self.listToDoItem.count - 1 {
-                stringToSave.append("\n")
-            }
-        }
-        do {
-            try stringToSave.write(to: fileURL, atomically: true, encoding: .utf8)
-        } catch {
-            print("Ошибка")
-        }
-    }
-    
-    func loadFromFile(withPath: String) {
-        let filePathURL = URL(fileURLWithPath: withPath)
-        if let jsonData = try? Data(contentsOf: filePathURL) {
-            guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [Any] else {
-                return
-            }
-            for item in json {
-                if let itemToAdd = ToDoItem.parse(json: item) {
-                    addItemToList(item: itemToAdd)
-                }
-            }
-        }
-    }
-    
-    func loadFromCsvFile(withPath: String) {
-        let filePathURL = URL(fileURLWithPath: withPath)
-        do {
-            let pattern = "id;text;importance;deadline;completeStatus;createdAt;changedAt"
-            let csvString = try String(contentsOf: filePathURL)
-            let csvLines = csvString.split(separator: "\n").map { String($0) }
-            guard csvLines.count > 1 , csvLines[0] == pattern else {
-                return
-            }
-            for index in 1..<csvLines.count  {
-                if let item = ToDoItem.parse(csv: csvLines[index]) {
-                    addItemToList(item: item)
-                }
-            }
-        } catch {
-            print("Ошибка")
-        }
-    }
-    
-    init(list: [ToDoItem]) {
-        self.listToDoItem = []
-        for item in list {
-            addItemToList(item: item)
-        }
-    }
-    
-}
-    
