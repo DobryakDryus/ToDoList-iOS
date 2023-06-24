@@ -7,13 +7,70 @@
 //
 import UIKit
 
+enum Color {
+    
+    case supportSeparator
+    case supportOverlay
+    case supportNavBar
+    case labelPrimary
+    case labelSecondary
+    case labelTertiary
+    case labelDisable
+    case colorRed
+    case colorGreen
+    case colorBlue
+    case colorGray
+    case colorGrayLight
+    case colorWhite
+    case backiOSPrimary
+    case backPrimary
+    
+    
+    var uiColor: UIColor {
+        switch self {
+        case .supportSeparator:
+            return UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        case .supportOverlay:
+            return UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.06)
+        case .supportNavBar:
+            return UIColor(red: 0.98, green: 0.98, blue: 0.98, alpha: 0.8)
+        case .labelPrimary:
+            return UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1)
+        case .labelSecondary:
+            return UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.6)
+        case .labelTertiary:
+            return UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
+        case .labelDisable:
+            return UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.15)
+        case .colorRed:
+            return UIColor(red: 1.0, green: 0.23, blue: 0.19, alpha: 1.0)
+        case .colorGreen:
+            return UIColor(red: 0.2, green: 0.78, blue: 0.35, alpha: 1.0)
+        case .colorBlue:
+            return UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
+        case .colorGray:
+            return UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
+        case .colorGrayLight:
+            return UIColor(red: 0.82, green: 0.82, blue: 0.84, alpha: 1.0)
+        case .colorWhite:
+            return UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        case .backiOSPrimary:
+            return UIColor(red: 0.95, green: 0.95, blue: 0.97, alpha: 1.0)
+        case .backPrimary:
+            return UIColor(red: 0.97, green: 0.97, blue: 0.95, alpha: 1.0)
+        }
+    }
+
+}
+
 class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     
+    private var toDoList = FileCache(list: [])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemPurple
         setUpNavBar()
+        view.backgroundColor = Color.backPrimary.uiColor
         view.addSubview(taskScrollView)
         taskScrollView.addSubview(stackContentView)
         stackContentView.addArrangedSubview(textViewItem)
@@ -28,17 +85,15 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         stackWithDate.addArrangedSubview(deadlineDateButton)
         stackWithDate.sendSubviewToBack(deadlineDateButton)
         secondCellStackView.addArrangedSubview(switchCase)
-//        secondCellStackView.addArrangedSubview(<#T##view: UIView##UIView#>)
         itemStackView.addArrangedSubview(secondSeparatorView)
         itemStackView.addArrangedSubview(calendarView)
         stackContentView.addArrangedSubview(deleteButton)
-        
         setUpTaskViewConstraints()
+        setUpLoadItemDetails()
     }
     
     private lazy var taskScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.backgroundColor = .systemRed
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isScrollEnabled = true
         scrollView.contentSize = CGSize(width: view.frame.size.width, height: view.frame.size.height)
@@ -69,22 +124,22 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     
     private lazy var separatorView: UIView =  {
         let separatorView = UIView()
-        separatorView.backgroundColor = .gray
+        separatorView.backgroundColor = Color.supportSeparator.uiColor
         
         return separatorView
     }()
     
     private lazy var secondSeparatorView: UIView =  {
         let separatorView = UIView()
-        separatorView.backgroundColor = .gray
+        separatorView.backgroundColor = Color.supportSeparator.uiColor
         separatorView.isHidden = true
+        
         return separatorView
     }()
     
     private lazy var firstCellStackView: UIStackView = {
        let firstCellStackView = UIStackView()
         firstCellStackView.axis = .horizontal
-//        firstCellStackView.distribution = .fillEqually
         firstCellStackView.alignment = .center
        return firstCellStackView
     }()
@@ -92,13 +147,18 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     private lazy var importanceLabel: UILabel = {
         let importanceLabel = UILabel()
         importanceLabel.text = "Важность"
-        importanceLabel.textColor = .black
+        importanceLabel.textColor = Color.labelPrimary.uiColor
         
         return importanceLabel
     }()
     
     private lazy var importanceControl: UISegmentedControl = {
-        let importanceControl = UISegmentedControl(items: ["↓", "нет", "‼️"])
+        
+        let downArrow = UIImage(systemName: "arrow.down", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!.withTintColor(Color.labelSecondary.uiColor, renderingMode: .alwaysOriginal)
+        
+        let twoExclamation = UIImage(systemName: "exclamationmark.2", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!.withTintColor(Color.colorRed.uiColor, renderingMode: .alwaysOriginal)
+        
+        let importanceControl = UISegmentedControl(items: [downArrow, "нет", twoExclamation])
         importanceControl.selectedSegmentIndex = 1
         importanceControl.setWidth(49, forSegmentAt: 0)
         importanceControl.setWidth(49, forSegmentAt: 1)
@@ -129,6 +189,7 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     private lazy var deadlineLabel: UILabel = {
         let deadlineLabel = UILabel()
         deadlineLabel.text = "Сделать до"
+        deadlineLabel.textColor = Color.labelPrimary.uiColor
         return deadlineLabel
     }()
     
@@ -203,7 +264,7 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         
         
         
-        calendarView.addTarget(self, action: #selector(changeDateTapped(_:)), for: .valueChanged )
+        calendarView.addTarget(self, action: #selector(changeDateTapped(_:)), for: .valueChanged)
         
         return calendarView
     }()
@@ -224,20 +285,28 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         deleteButton.backgroundColor = .white
         deleteButton.layer.cornerRadius = 16
         deleteButton.addTarget(self, action: #selector(myDeleteButtonTapped(_:)), for: .touchUpInside)
+        deleteButton.isEnabled = false
+        deleteButton.setTitleColor(Color.labelTertiary.uiColor, for: .normal)
 
         return deleteButton
     }()
 
     @objc func myDeleteButtonTapped(_ sender: UIButton!) {
-        print("Ты потрясающий")
+        guard let item = toDoList.listToDoItem.first else {
+            print("Удалять нечего")
+            return
+        }
+        toDoList.removeFromList(id: item.id)
+        print("Успешно удален")
+        toDoList.saveToFile()
     }
     
     private func setUpNavBar() {
         title = "Дело"
 
-        let rightNavigationButton = UIBarButtonItem(title: "Сохранить", style: UIBarButtonItem.Style.plain ,  target: self, action: #selector(self.myRightSideTaskNavigationBarButtonItemTapped(_:)))
-
-        let leftNavigationButton = UIBarButtonItem(title: "Отменить", style: UIBarButtonItem.Style.plain ,  target: self, action: #selector(self.myLeftSideTaskNavigationBarButtonItemTapped(_:)))
+        let rightNavigationButton = UIBarButtonItem(title: "Сохранить", style: UIBarButtonItem.Style.done ,  target: self, action: #selector(self.saveNavBarButtonTapped(_:)))
+     
+        let leftNavigationButton = UIBarButtonItem(title: "Отменить", style: UIBarButtonItem.Style.plain ,  target: self, action: #selector(self.cancelNavBarButtonTapped(_:)))
 
         navigationItem.rightBarButtonItem = rightNavigationButton
         navigationItem.leftBarButtonItem = leftNavigationButton
@@ -245,15 +314,16 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         rightNavigationButton.isEnabled = false
     }
     
-    
         private lazy var textViewItem: UITextView = {
             let textViewItem = UITextView()
-            textViewItem.backgroundColor = .white
+            textViewItem.backgroundColor = Color.colorWhite.uiColor
             textViewItem.text = "Что надо сделать?"
-            textViewItem.textColor = .lightGray
+            textViewItem.textColor = Color.labelTertiary.uiColor
+            textViewItem.font = UIFont.systemFont(ofSize: 17)
             textViewItem.layer.cornerRadius = 12
             textViewItem.isScrollEnabled = false
             textViewItem.delegate = self
+            textViewItem.textContainerInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
             
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(endEditing))
             tapGesture.cancelsTouchesInView = false
@@ -267,9 +337,9 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         }
     
         func textViewDidBeginEditing(_ textView: UITextView) {
-            if textView.textColor == .lightGray {
+            if textView.textColor == Color.labelTertiary.uiColor {
                 textView.text = nil
-                textView.textColor = .black
+                textView.textColor = Color.labelPrimary.uiColor
             }
             textView.becomeFirstResponder()
         }
@@ -278,24 +348,75 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         func textViewDidEndEditing(_ textView: UITextView) {
             if textView.text.isEmpty {
                 textView.text = "Что надо сделать?"
-                textView.textColor = .lightGray
+                textView.textColor = Color.labelTertiary.uiColor
                 self.navigationItem.rightBarButtonItem?.isEnabled = false
                 deleteButton.isEnabled = false
+                deleteButton.setTitleColor(Color.labelTertiary.uiColor, for: .normal)
             } else {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 deleteButton.isEnabled = true
+                deleteButton.setTitleColor(Color.colorRed.uiColor, for: .normal)
             }
             textView.resignFirstResponder()
         }
     
-    @objc func myRightSideTaskNavigationBarButtonItemTapped(_ sender:UIBarButtonItem!)
+    @objc func saveNavBarButtonTapped(_ sender:UIBarButtonItem!)
         {
-            print("Жмакнули правую")
+            let text = textViewItem.text ?? ""
+            let completeStatus = false
+            let deadlineDate = switchCase.isOn ? calendarView.date : nil
+            var importance: Importance
+            let createdAt = Date()
+            
+            switch importanceControl.selectedSegmentIndex {
+            case 0: importance = Importance.unimportant
+            case 1: importance = Importance.common
+            case 2: importance = Importance.important
+            default: importance = Importance.common
+            }
+            
+            let item = ToDoItem.init(text: text,
+                                     importance: importance,
+                                     deadline: deadlineDate,
+                                     completeStatus: completeStatus,
+                                     createdAt: createdAt
+                                     )
+            toDoList.addItemToList(item: item)
+            toDoList.saveToFile(withPath: "check.json")
         }
+    
+    func loadToDoItem() -> ToDoItem? {
+        toDoList.loadFromFile(withPath: "ToDoList.json")
+        guard let item = toDoList.listToDoItem.first else {return nil}
+        
+        return item
+    }
+    
+    private func setUpLoadItemDetails() {
+        guard let item = loadToDoItem() else { return }
+        textViewItem.text = item.text
+        switch item.importance {
+        case .important: importanceControl.selectedSegmentIndex = 2
+        case .unimportant: importanceControl.selectedSegmentIndex = 0
+        default: importanceControl.selectedSegmentIndex = 1
+        }
+        if let deadline = item.deadline {
+            switchCase.isOn = true
+            let dateForm = DateFormatter()
+            dateForm.setLocalizedDateFormatFromTemplate("d MMMM yyyy")
+            let deadlineStr = dateForm.string(from: deadline)
+            deadlineDateButton.setTitle(deadlineStr, for: .normal)
+        }
+    }
 
-    @objc func myLeftSideTaskNavigationBarButtonItemTapped(_ sender:UIBarButtonItem!)
+    // returns to root view
+    @objc func cancelNavBarButtonTapped(_ sender:UIBarButtonItem!)
         {
-            print("Жмакнули левую")
+            self.dismiss(animated: true, completion: {
+                if let navController = self.navigationController {
+                    navController.popToRootViewController(animated: true)
+                }
+            })
         }
 }
 
@@ -332,7 +453,7 @@ extension ToDoTaskViewController {
         stackContentView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            stackContentView.topAnchor.constraint(equalTo: taskScrollView.topAnchor),
+            stackContentView.topAnchor.constraint(equalTo: taskScrollView.topAnchor, constant: 16),
             stackContentView.bottomAnchor.constraint(equalTo: taskScrollView.bottomAnchor),
             stackContentView.leftAnchor.constraint(equalTo: taskScrollView.leftAnchor),
             stackContentView.rightAnchor.constraint(equalTo: taskScrollView.rightAnchor)
@@ -343,7 +464,6 @@ extension ToDoTaskViewController {
         itemStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-//            itemStackView.topAnchor.constraint(equalTo: textViewItem.bottomAnchor, constant: 16),
             itemStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
             itemStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
         ])
@@ -437,7 +557,7 @@ extension ToDoTaskViewController {
         textViewItem.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            textViewItem.topAnchor.constraint(equalTo: taskScrollView.topAnchor),
+            textViewItem.topAnchor.constraint(equalTo: stackContentView.topAnchor),
             textViewItem.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
             textViewItem.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
             textViewItem.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)

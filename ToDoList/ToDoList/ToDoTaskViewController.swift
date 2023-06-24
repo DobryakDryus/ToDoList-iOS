@@ -20,7 +20,7 @@ class ToDoListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .cyan
+        view.backgroundColor = Color.backiOSPrimary.uiColor
         
         view.addSubview(itemInfoButton)
         setUpAddItemButtonConstraints()
