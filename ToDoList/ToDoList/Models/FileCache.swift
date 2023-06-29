@@ -43,6 +43,7 @@ final class FileCache {
         if let jsonData = try? JSONSerialization.data(withJSONObject: jsonArr, options: .prettyPrinted) {
             do {
                 try jsonData.write(to: fileURL)
+                print(fileURL)
                 print("Успешно записан в файл!")
             } catch {
                 print("Ошибка")
@@ -63,6 +64,7 @@ final class FileCache {
         }
         do {
             try stringToSave.write(to: fileURL, atomically: true, encoding: .utf8)
+            print(stringToSave)
         } catch {
             print("Ошибка")
         }

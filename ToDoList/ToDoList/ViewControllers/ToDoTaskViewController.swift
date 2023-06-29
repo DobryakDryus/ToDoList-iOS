@@ -9,6 +9,19 @@ import UIKit
 
 class ToDoListViewController: UIViewController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.backiOSPrimary
+        
+        view.addSubview(itemInfoButton)
+        setUpAddItemButtonConstraints()
+    }
+    
+    @objc func itemInfoButtonTapped() {
+        let toDoTaskViewController = UINavigationController(rootViewController: ToDoTaskViewController())
+        present(toDoTaskViewController, animated: true, completion: nil)
+    }
+    
     private lazy var itemInfoButton: UIButton = {
         let itemInfoButton = UIButton()
         itemInfoButton.setTitle("Добавить задачу", for: .normal)
@@ -18,14 +31,6 @@ class ToDoListViewController: UIViewController {
         return itemInfoButton
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = Color.backiOSPrimary.uiColor
-        
-        view.addSubview(itemInfoButton)
-        setUpAddItemButtonConstraints()
-    }
-    
     private func setUpAddItemButtonConstraints() {
         itemInfoButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -34,9 +39,6 @@ class ToDoListViewController: UIViewController {
         ])
     }
     
-    @objc func itemInfoButtonTapped() {
-        let toDoTaskViewController = UINavigationController(rootViewController: ToDoTaskViewController())
-        present(toDoTaskViewController, animated: true, completion: nil)
-    }
+
 
 }
