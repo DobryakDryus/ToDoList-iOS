@@ -39,8 +39,15 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
             case 2: importance = Importance.important
             default: importance = Importance.common
             }
-            
+            var id: String
+            if let itemOld = item {
+                id = itemOld.id
+            } else {
+                id = UUID().uuidString
+            }
+        
             let item = ToDoItem(
+                id: id,
                 text: text,
                 importance: importance,
                 deadline: deadlineDate,
@@ -48,18 +55,16 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
                 createdAt: createdAt
             )
             
-            toDoList.addItemToList(item: item)
-            toDoList.saveToFile(withPath: filepath)
+            delegate?.didUpdateItem(item)
+            
+            dismiss(animated: true, completion: nil)
         }
     
     @objc func myDeleteButtonTapped(_ sender: UIButton!) {
-        guard let item = toDoList.listToDoItem.first else {
-            print("Удалять нечего")
-            return
+        if let item = item {
+            delegate?.didDeleteItem(item.id)
         }
-        toDoList.removeFromList(id: item.id)
-        print("Успешно удален")
-        toDoList.saveToFile()
+        dismiss(animated: true)
     }
     
     // returns to root view
@@ -74,12 +79,6 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - internal functions
     
-    func loadToDoItem() -> ToDoItem? {
-        toDoList.loadFromFile(withPath: filepath)
-        guard let item = toDoList.listToDoItem.first else {return nil}
-        
-        return item
-    }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.labelTertiary {
@@ -108,7 +107,6 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     // MARK: - private methods and variables
     
     private var filepath = "ToDoList.json"
-    private var toDoList = FileCache(list: [])
     
     private enum Static {
         static let cornerRadius: CGFloat = 16
@@ -161,6 +159,9 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         return textViewItem
     }()
     
+    var item: ToDoItem?
+    weak var delegate: ToDoItemViewControllerDelegate?
+    
     private lazy var importanceDeadlineStack: ImportanceDeadlineStackView = {
         let importanceDeadlineStack = ImportanceDeadlineStackView(axis: .vertical, stackDistribution: .fill, alignment: .center, spacing: 0)
 
@@ -184,8 +185,9 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     }()
     
     private func setUpLoadItemDetails() {
-        guard let item = loadToDoItem() else { return }
+        guard let item = item else { return }
         textViewItem.text = item.text
+        textViewItem.textColor = UIColor.labelPrimary
         switch item.importance {
         case .important: importanceDeadlineStack.importanceControl.selectedSegmentIndex = 2
         case .unimportant: importanceDeadlineStack.importanceControl.selectedSegmentIndex = 0
@@ -197,7 +199,20 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
 
             let deadlineStr = DateFormatter.taskDateFormatter.string(from: deadline)
             importanceDeadlineStack.deadlineDateButton.setTitle(deadlineStr, for: .normal)
+            importanceDeadlineStack.deadlineDateButton.isHidden = false
         }
+        deleteButton.isEnabled = true
+        deleteButton.setTitleColor(UIColor.colorRed, for: .normal)
+        navigationItem.rightBarButtonItem?.isEnabled = true
+    }
+    
+    init(item: ToDoItem?) {
+        self.item = item
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }
@@ -278,5 +293,10 @@ extension ToDoTaskViewController {
             textViewItem.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
         ])
     }
+}
+
+protocol ToDoItemViewControllerDelegate: AnyObject {
+    func didUpdateItem(_ item: ToDoItem)
+    func didDeleteItem(_ id: String)
 }
 

@@ -25,6 +25,7 @@
 		CDBFAE9E2A4CFD2B00FD2073 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAE9D2A4CFD2B00FD2073 /* UIImage+Extension.swift */; };
 		CDBFAEA02A4CFE9600FD2073 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAE9F2A4CFE9600FD2073 /* UIStackView+Extension.swift */; };
 		CDC7D7A82A44F439001CAAC4 /* ToDoTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC7D7A72A44F439001CAAC4 /* ToDoTaskViewController.swift */; };
+		CDF6FDE52A4FA7B500BCA55B /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF6FDE42A4FA7B400BCA55B /* CustomCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		CDBFAE9D2A4CFD2B00FD2073 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		CDBFAE9F2A4CFE9600FD2073 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		CDC7D7A72A44F439001CAAC4 /* ToDoTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTaskViewController.swift; sourceTree = "<group>"; };
+		CDF6FDE42A4FA7B400BCA55B /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 		CDB57DAA2A41FD42002C7A56 /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
+				CDF6FDE32A4FA77B00BCA55B /* ToDoListViewControllerDetails */,
 				CDBFAE8E2A4C6DCE00FD2073 /* Application */,
 				CDB57DDB2A41FD75002C7A56 /* Models */,
 				CDBFAE972A4C8A6000FD2073 /* ToDoTaskViewControllerDetails */,
@@ -204,6 +207,14 @@
 				CDBFAE982A4C8AEE00FD2073 /* ImportanceDeadlineStack.swift */,
 			);
 			path = ToDoTaskViewControllerDetails;
+			sourceTree = "<group>";
+		};
+		CDF6FDE32A4FA77B00BCA55B /* ToDoListViewControllerDetails */ = {
+			isa = PBXGroup;
+			children = (
+				CDF6FDE42A4FA7B400BCA55B /* CustomCell.swift */,
+			);
+			path = ToDoListViewControllerDetails;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -346,6 +357,7 @@
 				CDBFAE9E2A4CFD2B00FD2073 /* UIImage+Extension.swift in Sources */,
 				CDBFAE992A4C8AEE00FD2073 /* ImportanceDeadlineStack.swift in Sources */,
 				CDC7D7A82A44F439001CAAC4 /* ToDoTaskViewController.swift in Sources */,
+				CDF6FDE52A4FA7B500BCA55B /* CustomCell.swift in Sources */,
 				CDBFAEA02A4CFE9600FD2073 /* UIStackView+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
