@@ -8,6 +8,16 @@
 import UIKit
 
 class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ToDoItemViewControllerDelegate {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.backiOSPrimary
+            
+        setUpLayoutListView()
+    }
+    
+    // MARK: - toDoItem delegate functions
+    
     func didUpdateItem(_ item: ToDoItem) {
         self.fileCache.addItemToList(item: item)
         self.tableListView.reloadData()
@@ -19,104 +29,15 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
-    var fileCache = FileCache(list: [
+    private var fileCache = FileCache(list: [
         ToDoItem(id: "2", text: "Хочу гулять", importance: .common, deadline: Date.nextDay(), completeStatus: true, createdAt: Date(), changedAt: nil),
         ToDoItem(id: "5", text: "Купить питсы", importance: .common, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
         ToDoItem(id: "7", text: "Покушать, сходить погулять и попрыгать на батуте", importance: .unimportant, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
         ToDoItem(id: "8", text: "Собирает мама сына в школу, кладет хлеб колбасу и гвозди, сын спрашивает зачем, ну как зачем, берешь колбасу, кладешь на хлеб вот и бутерброды, а гвозди, так вот же они))", importance: .important, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil)
     ])
     
-    var isShowDone = true
+    private var isShowDone = true
     // MARK: - table methods and variables
-    
-    private lazy var tableListView: UITableView = {
-        let tableListView = UITableView()
-        tableListView.backgroundColor = UIColor.backiOSPrimary
-        tableListView.layer.cornerRadius = 12
-        tableListView.separatorInset = UIEdgeInsets(top: 0, left: 52, bottom: 0, right: 0)
-        tableListView.rowHeight = UITableView.automaticDimension
-        tableListView.estimatedRowHeight = 56
-        
-        tableListView.tableHeaderView = tableHeaderView
-        tableListView.tableFooterView = tableFooterView
-        
-        tableListView.delegate = self
-        tableListView.dataSource = self
-        
-        tableListView.register(ToDoListCell.self, forCellReuseIdentifier: ToDoListCell.identifierCell)
-        
-        return tableListView
-    }()
-    
-    private lazy var tableHeaderView: UIView = {
-        let tableHeaderView = UIView(frame: CGRect (x: 0, y: 0, width: view.frame.width - 32, height: 40))
-        
-        return tableHeaderView
-    }()
-    
-    private lazy var completeTasksCountLabel: UILabel = {
-        let completeTasksCount = UILabel()
-        var count = 0
-        completeTasksCount.text = "Выполнено \u{2014} \(self.fileCache.listToDoItem.filter {$0.completeStatus == true}.count)"
-        completeTasksCount.textColor = UIColor.labelTertiary
-        completeTasksCount.font = UIFont.systemFont(ofSize: 15)
-        
-        return completeTasksCount
-    }()
-    
-    private lazy var showButton: UIButton = {
-        let showButton = UIButton(type: .system)
-        showButton.setTitle("Скрыть", for: .normal)
-        showButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        showButton.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
-        return showButton
-    }()
-    
-    @objc func showButtonTapped() {
-        isShowDone = !isShowDone
-        if isShowDone {
-            showButton.setTitle("Скрыть", for: .normal)
-        } else {
-            showButton.setTitle("Показать", for: .normal)
-        }
-        
-        tableListView.reloadData()
-    }
-    
-    private lazy var tableFooterView: UIView = {
-        let tableFooterView = UIView(frame: CGRect (x: 0, y: 0, width: view.frame.width - 32, height: 56))
-        
-        tableFooterView.backgroundColor = UIColor.colorWhite
-        tableFooterView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner ]
-        tableFooterView.layer.cornerRadius = 16
-        let footerButton = UIButton()
-        footerButton.addTarget(self, action: #selector(addItemButtonTapped), for: .touchUpInside)
-        
-        tableFooterView.addSubview(footerButton)
-        
-        let textFooter = UILabel()
-        textFooter.text = "Новое"
-        textFooter.textColor = UIColor.tertiaryLabel
-        
-        footerButton.translatesAutoresizingMaskIntoConstraints = false
-        textFooter.translatesAutoresizingMaskIntoConstraints = false
-        
-        tableFooterView.addSubview(textFooter)
-        
-        NSLayoutConstraint.activate([
-            footerButton.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
-            footerButton.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
-            footerButton.topAnchor.constraint(equalTo: tableFooterView.topAnchor),
-            footerButton.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
-            
-            
-            textFooter.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor, constant: 52),
-            textFooter.topAnchor.constraint(equalTo: tableFooterView.topAnchor, constant: 12),
-            textFooter.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor, constant: -12)
-        ])
-        
-        return tableFooterView
-    }()
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
             if indexPath.row == 0 {
@@ -136,8 +57,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             }
 
     }
-    
-
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isShowDone ? fileCache.listToDoItem.count : fileCache.listToDoItem.filter { $0.completeStatus == false}.count
@@ -211,17 +130,27 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         return cellTable
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let toDoTaskViewController = ToDoTaskViewController(item: self.fileCache.listToDoItem[indexPath.row])
+        toDoTaskViewController.delegate = self
+        let toDoTaskNavViewConroller = UINavigationController(rootViewController: toDoTaskViewController)
+        present(toDoTaskNavViewConroller, animated: true, completion: nil)
+    }
 
     
     
-    // MARK: - another func
+    // MARK: - gestures recognizing functions
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor.backiOSPrimary
-            
-        setUpLayoutListView()
-        //setUpAddItemButtonConstraints()
+    @objc func showButtonTapped() {
+        isShowDone = !isShowDone
+        if isShowDone {
+            showButton.setTitle("Скрыть", for: .normal)
+        } else {
+            showButton.setTitle("Показать", for: .normal)
+        }
+        
+        tableListView.reloadData()
     }
     
     @objc func addItemButtonTapped() {
@@ -229,11 +158,79 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         toDoTaskViewController.delegate = self
         let navTaskViewController = UINavigationController(rootViewController: toDoTaskViewController)
         self.present(navTaskViewController, animated: true, completion: nil)
-//        present(toDoTaskViewController, animated: true, completion: nil)
     }
     
     // MARK: - private methods and variables
     
+    private lazy var tableListView: UITableView = {
+        let tableListView = UITableView()
+        tableListView.backgroundColor = UIColor.backiOSPrimary
+        tableListView.layer.cornerRadius = 12
+        tableListView.separatorInset = UIEdgeInsets(top: 0, left: 52, bottom: 0, right: 0)
+        tableListView.rowHeight = UITableView.automaticDimension
+        tableListView.estimatedRowHeight = 56
+        
+        tableListView.tableHeaderView = tableHeaderView
+        tableListView.tableFooterView = tableFooterView
+        
+        tableListView.delegate = self
+        tableListView.dataSource = self
+        
+        tableListView.register(ToDoListCell.self, forCellReuseIdentifier: ToDoListCell.identifierCell)
+        
+        return tableListView
+    }()
+    
+    private lazy var tableHeaderView: UIView = {
+        let tableHeaderView = UIView(frame: CGRect (x: 0, y: 0, width: view.frame.width - 32, height: 40))
+        
+        return tableHeaderView
+    }()
+    
+    private lazy var completeTasksCountLabel: UILabel = {
+        let completeTasksCount = UILabel()
+        var count = 0
+        completeTasksCount.text = "Выполнено \u{2014} \(self.fileCache.listToDoItem.filter {$0.completeStatus == true}.count)"
+        completeTasksCount.textColor = UIColor.labelTertiary
+        completeTasksCount.font = UIFont.systemFont(ofSize: 15)
+        
+        return completeTasksCount
+    }()
+    
+    private lazy var showButton: UIButton = {
+        let showButton = UIButton(type: .system)
+        showButton.setTitle("Скрыть", for: .normal)
+        showButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        showButton.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
+        return showButton
+    }()
+    
+    private lazy var tableFooterView: UIView = {
+        let tableFooterView = UIView(frame: CGRect (x: 0, y: 0, width: view.frame.width - 32, height: 56))
+        
+        tableFooterView.backgroundColor = UIColor.colorWhite
+        tableFooterView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner ]
+        tableFooterView.layer.cornerRadius = 16
+        let footerButton = UIButton()
+        footerButton.addTarget(self, action: #selector(addItemButtonTapped), for: .touchUpInside)
+     
+        return tableFooterView
+    }()
+    
+    private lazy var textFooter: UILabel = {
+        let textFooter = UILabel()
+        textFooter.text = "Новое"
+        textFooter.textColor = UIColor.tertiaryLabel
+        
+        return textFooter
+    }()
+    
+    private lazy var footerButton: UIButton = {
+        let footerButton = UIButton()
+        footerButton.addTarget(self, action: #selector(addItemButtonTapped), for: .touchUpInside)
+
+        return footerButton
+    }()
     
     private lazy var addNewTaskButton: UIButton = {
         let addNewTaskButton = UIButton()
@@ -259,16 +256,20 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
 
 extension ToDoListViewController {
     
+    // MARK: - constraints
+    
     private func setUpLayoutListView() {
         setUpNavBar()
-//        view.addSubview(itemInfoButton)
         view.addSubview(tableListView)
         tableHeaderView.addSubview(completeTasksCountLabel)
         tableHeaderView.addSubview(showButton)
         view.addSubview(addNewTaskButton)
+        tableFooterView.addSubview(footerButton)
+        tableFooterView.addSubview(textFooter)
         addNewTaskButton.addSubview(newTaskButtonImage)
         setUpTableViewConstraints()
         setUpHeaderTableConstraints()
+        setUpFooterTableConstraints()
         setUpAddButtonConstraints()
     }
     
@@ -314,6 +315,24 @@ extension ToDoListViewController {
             showButton.topAnchor.constraint(equalTo: tableHeaderView.topAnchor, constant: 8),
             showButton.rightAnchor.constraint(equalTo: tableHeaderView.rightAnchor, constant: -16),
             showButton.bottomAnchor.constraint(equalTo: tableHeaderView.bottomAnchor, constant: -12)
+        ])
+    }
+    
+    private func setUpFooterTableConstraints() {
+        footerButton.translatesAutoresizingMaskIntoConstraints = false
+        textFooter.translatesAutoresizingMaskIntoConstraints = false
+    
+        
+        NSLayoutConstraint.activate([
+            footerButton.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
+            footerButton.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
+            footerButton.topAnchor.constraint(equalTo: tableFooterView.topAnchor),
+            footerButton.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
+            
+            
+            textFooter.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor, constant: 52),
+            textFooter.topAnchor.constraint(equalTo: tableFooterView.topAnchor, constant: 12),
+            textFooter.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor, constant: -12)
         ])
     }
     

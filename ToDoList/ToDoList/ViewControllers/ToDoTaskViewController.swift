@@ -77,8 +77,10 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
             })
         }
     
-    // MARK: - internal functions
+    // MARK: - internal functions and variables
     
+    var item: ToDoItem?
+    weak var delegate: ToDoItemViewControllerDelegate?
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.labelTertiary {
@@ -158,9 +160,6 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
         
         return textViewItem
     }()
-    
-    var item: ToDoItem?
-    weak var delegate: ToDoItemViewControllerDelegate?
     
     private lazy var importanceDeadlineStack: ImportanceDeadlineStackView = {
         let importanceDeadlineStack = ImportanceDeadlineStackView(axis: .vertical, stackDistribution: .fill, alignment: .center, spacing: 0)

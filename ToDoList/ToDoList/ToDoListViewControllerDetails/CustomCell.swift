@@ -9,60 +9,10 @@ import UIKit
 
 class ToDoListCell: UITableViewCell {
     
+    // MARK: - internal variables and methods
+    
     static let identifierCell = "ToDoListCell"
     var item: ToDoItem!
-    
-    
-    let cellContentView: UIView = {
-        let cellContentView = UIView()
-        
-        return cellContentView
-    }()
-    
-    var imageCell: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage.circle
-        imageView.contentMode = .scaleAspectFit
-        
-        
-        return imageView
-    }()
-    
-    var textStackView: UIStackView = {
-        let textStackView = UIStackView(axis: .vertical, distribution: .equalCentering, alignment: .leading, spacing: 0)
-        
-        return textStackView
-    }()
-    
-    var labelStackView: UILabel = {
-        let labelStackView = UILabel()
-        labelStackView.numberOfLines = 3
-        labelStackView.font = .systemFont(ofSize: 17)
-        
-        return labelStackView
-    }()
-    
-    var stackDeadline: UIStackView = {
-        let stackDeadline = UIStackView(axis: .horizontal, distribution: .fillProportionally, alignment: .leading, spacing: 2)
-            stackDeadline.isHidden = true
-        
-        return stackDeadline
-    }()
-    
-    let calendarImageView: UIImageView = {
-        let calendarImageView = UIImageView()
-        calendarImageView.image = UIImage.calendar
-        
-        return calendarImageView
-    }()
-    
-    var deadlineTextLabel: UILabel = {
-        let deadlineTextLabel = UILabel()
-        deadlineTextLabel.font = .systemFont(ofSize: 15)
-        deadlineTextLabel.textColor = UIColor.labelTertiary
-        
-        return deadlineTextLabel
-    }()
     
     func configure(with item: ToDoItem) {
         self.item = item
@@ -75,7 +25,65 @@ class ToDoListCell: UITableViewCell {
         }
     }
     
-    func setImage() {
+    func setComplete() {
+        labelStackView.attributedText = NSAttributedString(string: self.item.text , attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+        imageCell.image = UIImage(named: "completeCircle")
+    }
+    
+    // MARK: - private variables and methods
+    
+    private let cellContentView: UIView = {
+        let cellContentView = UIView()
+        
+        return cellContentView
+    }()
+    
+    private var imageCell: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage.circle
+        imageView.contentMode = .scaleAspectFit
+        
+        
+        return imageView
+    }()
+    
+    private  var textStackView: UIStackView = {
+        let textStackView = UIStackView(axis: .vertical, distribution: .equalCentering, alignment: .leading, spacing: 0)
+        
+        return textStackView
+    }()
+    
+    private  var labelStackView: UILabel = {
+        let labelStackView = UILabel()
+        labelStackView.numberOfLines = 3
+        labelStackView.font = .systemFont(ofSize: 17)
+        
+        return labelStackView
+    }()
+    
+    private var stackDeadline: UIStackView = {
+        let stackDeadline = UIStackView(axis: .horizontal, distribution: .fillProportionally, alignment: .leading, spacing: 2)
+            stackDeadline.isHidden = true
+        
+        return stackDeadline
+    }()
+    
+    private let calendarImageView: UIImageView = {
+        let calendarImageView = UIImageView()
+        calendarImageView.image = UIImage.calendar
+        
+        return calendarImageView
+    }()
+    
+    private var deadlineTextLabel: UILabel = {
+        let deadlineTextLabel = UILabel()
+        deadlineTextLabel.font = .systemFont(ofSize: 15)
+        deadlineTextLabel.textColor = UIColor.labelTertiary
+        
+        return deadlineTextLabel
+    }()
+    
+    private func setImage() {
         if self.item.completeStatus {
             imageCell.image = UIImage(named: "completeCircle")
         } else if self.item.importance == .important {
@@ -85,12 +93,7 @@ class ToDoListCell: UITableViewCell {
         }
     }
     
-    func setComplete() {
-        labelStackView.attributedText = NSAttributedString(string: self.item.text , attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
-        imageCell.image = UIImage(named: "completeCircle")
-    }
-    
-    func setTextToCell() {
+    private func setTextToCell() {
         if item.completeStatus {
             labelStackView.attributedText = NSAttributedString(string: item.text , attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
             labelStackView.textColor = UIColor.labelTertiary
@@ -105,6 +108,9 @@ class ToDoListCell: UITableViewCell {
             labelStackView.textColor = UIColor.labelPrimary
         }
     }
+    
+    
+    // MARK: - initializers and overriden func
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -131,6 +137,8 @@ class ToDoListCell: UITableViewCell {
 }
 
 extension ToDoListCell {
+    
+    // MARK: - costraints
     
     
     private func setUpLayoutToDoListCell() {
