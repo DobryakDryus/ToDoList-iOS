@@ -13,6 +13,12 @@ extension DateFormatter {
         dateFormatter.setLocalizedDateFormatFromTemplate("d MMMM yyyy")
         return dateFormatter
     }()
+    
+    static let cellDateFormatter: DateFormatter = {
+        let cellDateFormatter = DateFormatter()
+        cellDateFormatter.setLocalizedDateFormatFromTemplate("d MMMM")
+        return cellDateFormatter
+    }()
 }
 
 extension Date {
