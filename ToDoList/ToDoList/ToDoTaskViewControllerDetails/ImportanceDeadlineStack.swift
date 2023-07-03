@@ -128,7 +128,7 @@ class ImportanceDeadlineStackView: UIStackView {
     }()
     
     private lazy var firstCellStackView: UIStackView = {
-        let firstCellStackView = UIStackView(axis: .horizontal, distribution: .fill, alignment: .center, spacing: 0)
+        let firstCellStackView = UIStackView(axis: .horizontal, distribution: .equalCentering, alignment: .center, spacing: 0)
 
        return firstCellStackView
     }()
@@ -206,7 +206,6 @@ extension ImportanceDeadlineStackView {
     
     private func setUpConstraintsToStack() {
         setUpStackFirstCellConstaints()
-        setUpImportanceControlConstraints()
         setUpSeparatorCellConstraints()
         setUpStackSecondCellConstaints()
         setUpStackViewDateConstraints()
@@ -221,16 +220,6 @@ extension ImportanceDeadlineStackView {
             firstCellStackView.heightAnchor.constraint(equalToConstant: 56),
             firstCellStackView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
             firstCellStackView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16)
-        ])
-    }
-    
-    private func setUpImportanceControlConstraints() {
-        importanceControl.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            importanceControl.topAnchor.constraint(equalTo: firstCellStackView.topAnchor, constant: 10),
-            importanceControl.bottomAnchor.constraint(equalTo: firstCellStackView.bottomAnchor, constant: -10),
-            importanceControl.rightAnchor.constraint(equalTo: firstCellStackView.rightAnchor)
         ])
     }
     
