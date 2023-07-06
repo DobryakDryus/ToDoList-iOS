@@ -140,7 +140,6 @@ extension ToDoListCell {
     
     // MARK: - costraints
     
-    
     private func setUpLayoutToDoListCell() {
         self.addSubview(cellContentView)
         cellContentView.addSubview(imageCell)

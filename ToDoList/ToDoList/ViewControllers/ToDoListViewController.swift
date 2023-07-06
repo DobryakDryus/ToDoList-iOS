@@ -29,14 +29,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
-    private var fileCache = FileCache(list: [
-        ToDoItem(id: "2", text: "Хочу гулять", importance: .common, deadline: Date.nextDay(), completeStatus: true, createdAt: Date(), changedAt: nil),
-        ToDoItem(id: "5", text: "Купить питсы", importance: .common, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
-        ToDoItem(id: "7", text: "Покушать, сходить погулять и попрыгать на батуте", importance: .unimportant, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
-        ToDoItem(id: "8", text: "Собирает мама сына в школу, кладет хлеб колбасу и гвозди, сын спрашивает зачем, ну как зачем, берешь колбасу, кладешь на хлеб вот и бутерброды, а гвозди, так вот же они))", importance: .important, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil)
-    ])
-    
-    private var isShowDone = true
+
     // MARK: - table methods and variables
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -161,6 +154,15 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // MARK: - private methods and variables
+    
+    private var fileCache = FileCache(list: [
+        ToDoItem(id: "2", text: "Хочу гулять", importance: .common, deadline: Date.nextDay(), completeStatus: true, createdAt: Date(), changedAt: nil),
+        ToDoItem(id: "5", text: "Купить питсы", importance: .common, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
+        ToDoItem(id: "7", text: "Покушать, сходить погулять и попрыгать на батуте", importance: .unimportant, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
+        ToDoItem(id: "8", text: "Собирает мама сына в школу, кладет хлеб колбасу и гвозди, сын спрашивает зачем, ну как зачем, берешь колбасу, кладешь на хлеб вот и бутерброды, а гвозди, так вот же они))", importance: .important, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil)
+    ])
+    
+    private var isShowDone = true
     
     private lazy var tableListView: UITableView = {
         let tableListView = UITableView()
