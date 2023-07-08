@@ -18,9 +18,20 @@ final class FileCache {
         listToDoItem[index] = item
     }
     
+    func isOldElement(item: ToDoItem) -> Bool {
+        return self.listToDoItem.filter { $0.id == item.id }.count == 1
+    }
     
     func removeFromList(id: String) {
         self.listToDoItem.removeAll { $0.id == id }
+    }
+    
+    func removeAll() {
+        self.listToDoItem.removeAll()
+    }
+    
+    func newList(list: [ToDoItem]) {
+        self.listToDoItem = list
     }
     
     // Help function that returns File URL to save
