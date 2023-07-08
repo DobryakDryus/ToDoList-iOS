@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CD4005D12A58E7B200EDF83C /* ServerToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D02A58E7B200EDF83C /* ServerToDoItem.swift */; };
 		CD4005D32A58E7D200EDF83C /* ServerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D22A58E7D200EDF83C /* ServerCache.swift */; };
+		CD4005D52A58FDE100EDF83C /* URLSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D42A58FDE100EDF83C /* URLSession+Extension.swift */; };
 		CD5260572A574E7F00F4F5C2 /* NetworkingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5260562A574E7F00F4F5C2 /* NetworkingProtocol.swift */; };
 		CD5260592A574EA900F4F5C2 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5260582A574EA900F4F5C2 /* DefaultNetworkingService.swift */; };
 		CDB57DAC2A41FD42002C7A56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB57DAB2A41FD42002C7A56 /* AppDelegate.swift */; };
@@ -52,6 +53,7 @@
 /* Begin PBXFileReference section */
 		CD4005D02A58E7B200EDF83C /* ServerToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerToDoItem.swift; sourceTree = "<group>"; };
 		CD4005D22A58E7D200EDF83C /* ServerCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCache.swift; sourceTree = "<group>"; };
+		CD4005D42A58FDE100EDF83C /* URLSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Extension.swift"; sourceTree = "<group>"; };
 		CD5260562A574E7F00F4F5C2 /* NetworkingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingProtocol.swift; sourceTree = "<group>"; };
 		CD5260582A574EA900F4F5C2 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
 		CDB57DA82A41FD42002C7A56 /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,6 +203,7 @@
 				CDBFAE9B2A4CE91000FD2073 /* DateFormatter+Extension.swift */,
 				CDBFAE9D2A4CFD2B00FD2073 /* UIImage+Extension.swift */,
 				CDBFAE9F2A4CFE9600FD2073 /* UIStackView+Extension.swift */,
+				CD4005D42A58FDE100EDF83C /* URLSession+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				CD5260592A574EA900F4F5C2 /* DefaultNetworkingService.swift in Sources */,
 				CDF6FDE52A4FA7B500BCA55B /* CustomCell.swift in Sources */,
 				CDBFAEA02A4CFE9600FD2073 /* UIStackView+Extension.swift in Sources */,
+				CD4005D52A58FDE100EDF83C /* URLSession+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,6 +494,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = "";
 			};
 			name = Debug;
 		};
@@ -544,6 +549,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = "";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
