@@ -22,7 +22,7 @@ class ToDoTaskViewController: UIViewController, UITextViewDelegate {
     // MARK: - gesture recognizing functions
     
     @objc func endEditing() {
-        textViewItem.resignFirstResponder()
+        textViewItem.resignFirstResponder() 
     }
     
     @objc func saveNavBarButtonTapped(_ sender:UIBarButtonItem!)

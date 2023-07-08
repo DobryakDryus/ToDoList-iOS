@@ -14,17 +14,26 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         view.backgroundColor = UIColor.backiOSPrimary
             
         setUpLayoutListView()
+        loadFileCacheFromServer()
     }
-    
+        
     // MARK: - toDoItem delegate functions
     
     func didUpdateItem(_ item: ToDoItem) {
+        let toChange = self.fileCache.isOldElement(item: item)
         self.fileCache.addItemToList(item: item)
+        if toChange {
+            changeItemOnServer(with: item)
+        } else {
+            addItemToServer(with: item)
+        }
         self.tableListView.reloadData()
     }
     
     func didDeleteItem(_ id: String) {
         self.fileCache.removeFromList(id: id)
+        deleteFromServer(with: id)
+        updateCompleteLabel()
         self.tableListView.reloadData()
     }
     
@@ -62,8 +71,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         let makeDoneSwipeAction = UIContextualAction(style: .normal, title: nil, handler: {
              (_, _, completion) in
-            self.fileCache.addItemToList(item: ToDoItem(id: cellTable.item.id, text: cellTable.item.text, importance: cellTable.item.importance, deadline: cellTable.item.deadline, completeStatus: !cellTable.item.completeStatus, createdAt: cellTable.item.createdAt, changedAt: cellTable.item.changedAt))
+            let newItem = ToDoItem(id: cellTable.item.id, text: cellTable.item.text, importance: cellTable.item.importance, deadline: cellTable.item.deadline, completeStatus: !cellTable.item.completeStatus, createdAt: cellTable.item.createdAt, changedAt: cellTable.item.changedAt)
+            self.fileCache.addItemToList(item: newItem)
             cellTable.setComplete()
+            self.changeItemOnServer(with: newItem)
             self.updateCompleteLabel()
             tableView.reloadData()
             completion(true)
@@ -97,8 +108,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         
         
         let makeDeleteSwipeAction = UIContextualAction(style: .normal, title: nil, handler: { (_, _, completion) in
+            
             self.fileCache.removeFromList(id: cellTable.item.id)
             self.updateCompleteLabel()
+            self.deleteFromServer(with: cellTable.item.id)
             tableView.reloadData()
             completion(true)
         })
@@ -163,6 +176,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     ])
     
     private var isShowDone = true
+    private var isDirty = false
     
     private lazy var tableListView: UITableView = {
         let tableListView = UITableView()
@@ -252,6 +266,66 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.layoutMargins.left = 32
 
+    }
+    
+    // MARK: - syncronization with server
+    
+    private func loadFileCacheFromServer() {
+        Task {
+            do {
+                let list = try await DefaultNetworkingService.getListFromServer()
+                fileCache.removeAll()
+                fileCache.newList(list: list)
+                DefaultNetworkingService.isDirty = false
+                updateCompleteLabel()
+                tableListView.reloadData()
+            } catch {
+                print("Ошибка \(error)")
+                DefaultNetworkingService.isDirty = true
+            }
+        }
+    }
+
+    private func addItemToServer(with item: ToDoItem) {
+        Task {
+            do {
+                let _ = try await DefaultNetworkingService.addElementToList(item: item)
+                DefaultNetworkingService.isDirty = false
+                updateCompleteLabel()
+                tableListView.reloadData()
+            } catch {
+                print("Ошибка \(error)")
+                DefaultNetworkingService.isDirty = true
+            }
+        }
+    }
+    
+    private func changeItemOnServer(with item: ToDoItem) {
+        Task {
+            do {
+                let _ = try await DefaultNetworkingService.changeElementOnServer(item: item)
+                DefaultNetworkingService.isDirty = false
+                updateCompleteLabel()
+                tableListView.reloadData()
+            } catch {
+                print("Ошибка \(error)")
+                DefaultNetworkingService.isDirty = true
+            }
+        }
+    }
+    
+    private func deleteFromServer(with id: String) {
+        Task {
+            do {
+                let _ = try await DefaultNetworkingService.deleteElementFromList(withId: id)
+                DefaultNetworkingService.isDirty = false
+                updateCompleteLabel()
+                tableListView.reloadData()
+            } catch {
+                print("Ошибка \(error)")
+                DefaultNetworkingService.isDirty = true
+            }
+        }
     }
 
 }
