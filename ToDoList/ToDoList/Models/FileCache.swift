@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SQLite
 
 final class FileCache {
     private(set) var listToDoItem: [ToDoItem]

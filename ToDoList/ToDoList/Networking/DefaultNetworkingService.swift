@@ -42,6 +42,7 @@ final class DefaultNetworkingService: NetworkServiceProtocol {
         
         let (data, response) = try await URLSession.shared.data(for: authorizedRequest)
         try handleErrors(with: response)
+        
         let (toDoItemList, syncRevision) = try ServerCache.decodeServerItemToAppItem(with: data)
         
         self.revision = syncRevision

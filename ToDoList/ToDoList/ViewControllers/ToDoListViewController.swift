@@ -6,38 +6,18 @@
 //
 
 import UIKit
+import SQLite
 
-class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ToDoItemViewControllerDelegate {
+class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.backiOSPrimary
             
         setUpLayoutListView()
-        loadFileCacheFromServer()
+        connectToSQLiteDB()
+        //loadFileCacheFromServer()
     }
-        
-    // MARK: - toDoItem delegate functions
-    
-    func didUpdateItem(_ item: ToDoItem) {
-        let toChange = self.fileCache.isOldElement(item: item)
-        self.fileCache.addItemToList(item: item)
-        if toChange {
-            changeItemOnServer(with: item)
-        } else {
-            addItemToServer(with: item)
-        }
-        self.tableListView.reloadData()
-    }
-    
-    func didDeleteItem(_ id: String) {
-        self.fileCache.removeFromList(id: id)
-        deleteFromServer(with: id)
-        updateCompleteLabel()
-        self.tableListView.reloadData()
-    }
-    
-    
 
     // MARK: - table methods and variables
     
@@ -74,7 +54,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             let newItem = ToDoItem(id: cellTable.item.id, text: cellTable.item.text, importance: cellTable.item.importance, deadline: cellTable.item.deadline, completeStatus: !cellTable.item.completeStatus, createdAt: cellTable.item.createdAt, changedAt: cellTable.item.changedAt)
             self.fileCache.addItemToList(item: newItem)
             cellTable.setComplete()
-            self.changeItemOnServer(with: newItem)
+            
+            SQLiteFileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: newItem)
+            
+            //self.changeItemOnServer(with: newItem)
             self.updateCompleteLabel()
             tableView.reloadData()
             completion(true)
@@ -111,7 +94,9 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             
             self.fileCache.removeFromList(id: cellTable.item.id)
             self.updateCompleteLabel()
-            self.deleteFromServer(with: cellTable.item.id)
+            //self.deleteFromServer(with: cellTable.item.id)
+            SQLiteFileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: cellTable.item.id)
+            
             tableView.reloadData()
             completion(true)
         })
@@ -168,15 +153,19 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - private methods and variables
     
-    private var fileCache = FileCache(list: [
-        ToDoItem(id: "2", text: "Хочу гулять", importance: .common, deadline: Date.nextDay(), completeStatus: true, createdAt: Date(), changedAt: nil),
-        ToDoItem(id: "5", text: "Купить питсы", importance: .common, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
-        ToDoItem(id: "7", text: "Покушать, сходить погулять и попрыгать на батуте", importance: .unimportant, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil),
-        ToDoItem(id: "8", text: "Собирает мама сына в школу, кладет хлеб колбасу и гвозди, сын спрашивает зачем, ну как зачем, берешь колбасу, кладешь на хлеб вот и бутерброды, а гвозди, так вот же они))", importance: .important, deadline: nil, completeStatus: false, createdAt: Date(), changedAt: nil)
-    ])
+    private var dbConnection = try? Connection()
+    
+    private var fileCache = FileCache(list: [])
     
     private var isShowDone = true
     private var isDirty = false
+    
+    private func connectToSQLiteDB() {
+        self.dbConnection = SQLiteFileCache.createDataBaseSQL()
+        self.fileCache.newList(list: SQLiteFileCache.getListFromSQLiteDB(dbConnection: dbConnection))
+        updateCompleteLabel()
+        self.tableListView.reloadData()
+    }
     
     private lazy var tableListView: UITableView = {
         let tableListView = UITableView()
@@ -270,63 +259,63 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - syncronization with server
     
-    private func loadFileCacheFromServer() {
-        Task {
-            do {
-                let list = try await DefaultNetworkingService.getListFromServer()
-                fileCache.removeAll()
-                fileCache.newList(list: list)
-                DefaultNetworkingService.isDirty = false
-                updateCompleteLabel()
-                tableListView.reloadData()
-            } catch {
-                print("Ошибка \(error)")
-                DefaultNetworkingService.isDirty = true
-            }
-        }
-    }
-
-    private func addItemToServer(with item: ToDoItem) {
-        Task {
-            do {
-                let _ = try await DefaultNetworkingService.addElementToList(item: item)
-                DefaultNetworkingService.isDirty = false
-                updateCompleteLabel()
-                tableListView.reloadData()
-            } catch {
-                print("Ошибка \(error)")
-                DefaultNetworkingService.isDirty = true
-            }
-        }
-    }
-    
-    private func changeItemOnServer(with item: ToDoItem) {
-        Task {
-            do {
-                let _ = try await DefaultNetworkingService.changeElementOnServer(item: item)
-                DefaultNetworkingService.isDirty = false
-                updateCompleteLabel()
-                tableListView.reloadData()
-            } catch {
-                print("Ошибка \(error)")
-                DefaultNetworkingService.isDirty = true
-            }
-        }
-    }
-    
-    private func deleteFromServer(with id: String) {
-        Task {
-            do {
-                let _ = try await DefaultNetworkingService.deleteElementFromList(withId: id)
-                DefaultNetworkingService.isDirty = false
-                updateCompleteLabel()
-                tableListView.reloadData()
-            } catch {
-                print("Ошибка \(error)")
-                DefaultNetworkingService.isDirty = true
-            }
-        }
-    }
+//    private func loadFileCacheFromServer() {
+//        Task {
+//            do {
+//                let list = try await DefaultNetworkingService.getListFromServer()
+//                fileCache.removeAll()
+//                fileCache.newList(list: list)
+//                DefaultNetworkingService.isDirty = false
+//                updateCompleteLabel()
+//                tableListView.reloadData()
+//            } catch {
+//                print("Ошибка \(error)")
+//                DefaultNetworkingService.isDirty = true
+//            }
+//        }
+//    }
+//
+//    private func addItemToServer(with item: ToDoItem) {
+//        Task {
+//            do {
+//                let _ = try await DefaultNetworkingService.addElementToList(item: item)
+//                DefaultNetworkingService.isDirty = false
+//                updateCompleteLabel()
+//                tableListView.reloadData()
+//            } catch {
+//                print("Ошибка \(error)")
+//                DefaultNetworkingService.isDirty = true
+//            }
+//        }
+//    }
+//
+//    private func changeItemOnServer(with item: ToDoItem) {
+//        Task {
+//            do {
+//                let _ = try await DefaultNetworkingService.changeElementOnServer(item: item)
+//                DefaultNetworkingService.isDirty = false
+//                updateCompleteLabel()
+//                tableListView.reloadData()
+//            } catch {
+//                print("Ошибка \(error)")
+//                DefaultNetworkingService.isDirty = true
+//            }
+//        }
+//    }
+//
+//    private func deleteFromServer(with id: String) {
+//        Task {
+//            do {
+//                let _ = try await DefaultNetworkingService.deleteElementFromList(withId: id)
+//                DefaultNetworkingService.isDirty = false
+//                updateCompleteLabel()
+//                tableListView.reloadData()
+//            } catch {
+//                print("Ошибка \(error)")
+//                DefaultNetworkingService.isDirty = true
+//            }
+//        }
+//    }
 
 }
 
@@ -411,7 +400,33 @@ extension ToDoListViewController {
             textFooter.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor, constant: -12)
         ])
     }
+}
+
+extension ToDoListViewController: ToDoItemViewControllerDelegate {
+    // MARK: - toDoItem delegate functions
     
+    func didUpdateItem(_ item: ToDoItem) {
+        //let toChange = self.fileCache.isOldElement(item: item)
+        self.fileCache.addItemToList(item: item)
+        
+        SQLiteFileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: item)
+        
+        //        Homework 5-6 with Server
+        //        if toChange {
+        //            changeItemOnServer(with: item)
+        //        } else {
+        //            addItemToServer(with: item)
+        //        }
+        self.tableListView.reloadData()
+    }
     
+    func didDeleteItem(_ id: String) {
+        self.fileCache.removeFromList(id: id)
+        
+        SQLiteFileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: id)
+        //deleteFromServer(with: id)
+        updateCompleteLabel()
+        self.tableListView.reloadData()
+    }
 }
 
