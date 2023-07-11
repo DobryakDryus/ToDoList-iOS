@@ -40,15 +40,15 @@ final class SQLiteFileCache {
             print("Unable to connect to database")
             return
         }
+        //todoitem.upsert(<#T##encodable: Encodable##Encodable#>, onConflictOf: <#T##Expressible#>)
         
-        let insert = todoitem.insert(or: .replace ,
-                                     DBFields.id <- item.id,
+        let insert = todoitem.upsert(DBFields.id <- item.id,
                                      DBFields.text <- item.text,
                                      DBFields.importance <- item.importance.rawValue,
                                      DBFields.deadline <- item.deadline != nil ? Int(item.deadline?.timeIntervalSince1970 ?? 0) : nil,
                                      DBFields.completeStatus <- item.completeStatus,
                                      DBFields.createdAt <- Int(item.createdAt.timeIntervalSince1970),
-                                     DBFields.changedAt <- item.changedAt != nil ? Int(item.changedAt?.timeIntervalSince1970 ?? 0) : nil
+                                     DBFields.changedAt <- item.changedAt != nil ? Int(item.changedAt?.timeIntervalSince1970 ?? 0) : nil, onConflictOf: DBFields.id
                                      )
         do {
             try db.run(insert)
