@@ -55,7 +55,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             self.fileCache.addItemToList(item: newItem)
             cellTable.setComplete()
             
-            SQLiteFileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: newItem)
+            self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: newItem)
             
             //self.changeItemOnServer(with: newItem)
             self.updateCompleteLabel()
@@ -95,7 +95,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             self.fileCache.removeFromList(id: cellTable.item.id)
             self.updateCompleteLabel()
             //self.deleteFromServer(with: cellTable.item.id)
-            SQLiteFileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: cellTable.item.id)
+            self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: cellTable.item.id)
             
             tableView.reloadData()
             completion(true)
@@ -161,8 +161,8 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     private var isDirty = false
     
     private func connectToSQLiteDB() {
-        self.dbConnection = SQLiteFileCache.createDataBaseSQL()
-        self.fileCache.newList(list: SQLiteFileCache.getListFromSQLiteDB(dbConnection: dbConnection))
+        self.dbConnection = self.fileCache.createDataBaseSQL()
+        self.fileCache.loadListFromSQLiteDB(dbConnection: dbConnection)
         updateCompleteLabel()
         self.tableListView.reloadData()
     }
@@ -409,8 +409,7 @@ extension ToDoListViewController: ToDoItemViewControllerDelegate {
         //let toChange = self.fileCache.isOldElement(item: item)
         self.fileCache.addItemToList(item: item)
         
-        SQLiteFileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: item)
-        
+        self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: item)
         //        Homework 5-6 with Server
         //        if toChange {
         //            changeItemOnServer(with: item)
@@ -423,7 +422,7 @@ extension ToDoListViewController: ToDoItemViewControllerDelegate {
     func didDeleteItem(_ id: String) {
         self.fileCache.removeFromList(id: id)
         
-        SQLiteFileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: id)
+        self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: id)
         //deleteFromServer(with: id)
         updateCompleteLabel()
         self.tableListView.reloadData()
