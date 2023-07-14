@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD02A1172A5C6B2600EE360A /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = CD02A1162A5C6B2600EE360A /* SQLite */; };
 		CD4005D12A58E7B200EDF83C /* ServerToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D02A58E7B200EDF83C /* ServerToDoItem.swift */; };
 		CD4005D32A58E7D200EDF83C /* ServerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D22A58E7D200EDF83C /* ServerCache.swift */; };
 		CD4005D52A58FDE100EDF83C /* URLSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D42A58FDE100EDF83C /* URLSession+Extension.swift */; };
 		CD5260572A574E7F00F4F5C2 /* NetworkingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5260562A574E7F00F4F5C2 /* NetworkingProtocol.swift */; };
 		CD5260592A574EA900F4F5C2 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5260582A574EA900F4F5C2 /* DefaultNetworkingService.swift */; };
+		CDA75C832A614F7D009AA34D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CDA75C812A614F7D009AA34D /* DataModel.xcdatamodeld */; };
+		CDA75C8A2A615052009AA34D /* ToDoItemCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA75C882A615052009AA34D /* ToDoItemCoreData+CoreDataClass.swift */; };
+		CDA75C8B2A615052009AA34D /* ToDoItemCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA75C892A615052009AA34D /* ToDoItemCoreData+CoreDataProperties.swift */; };
 		CDB57DAC2A41FD42002C7A56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB57DAB2A41FD42002C7A56 /* AppDelegate.swift */; };
 		CDB57DAE2A41FD42002C7A56 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB57DAD2A41FD42002C7A56 /* SceneDelegate.swift */; };
 		CDB57DB02A41FD42002C7A56 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB57DAF2A41FD42002C7A56 /* ToDoListViewController.swift */; };
@@ -30,6 +34,8 @@
 		CDBFAE9E2A4CFD2B00FD2073 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAE9D2A4CFD2B00FD2073 /* UIImage+Extension.swift */; };
 		CDBFAEA02A4CFE9600FD2073 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAE9F2A4CFE9600FD2073 /* UIStackView+Extension.swift */; };
 		CDC7D7A82A44F439001CAAC4 /* ToDoTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC7D7A72A44F439001CAAC4 /* ToDoTaskViewController.swift */; };
+		CDE83F152A5D5DF600106D84 /* SQLiteFileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE83F142A5D5DF600106D84 /* SQLiteFileCache.swift */; };
+		CDE83F202A5F01BB00106D84 /* FileCacheCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE83F1F2A5F01BB00106D84 /* FileCacheCoreData.swift */; };
 		CDF6FDE52A4FA7B500BCA55B /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF6FDE42A4FA7B400BCA55B /* CustomCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +62,9 @@
 		CD4005D42A58FDE100EDF83C /* URLSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Extension.swift"; sourceTree = "<group>"; };
 		CD5260562A574E7F00F4F5C2 /* NetworkingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingProtocol.swift; sourceTree = "<group>"; };
 		CD5260582A574EA900F4F5C2 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
+		CDA75C822A614F7D009AA34D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		CDA75C882A615052009AA34D /* ToDoItemCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDoItemCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CDA75C892A615052009AA34D /* ToDoItemCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDoItemCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CDB57DA82A41FD42002C7A56 /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDB57DAB2A41FD42002C7A56 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CDB57DAD2A41FD42002C7A56 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -76,6 +85,8 @@
 		CDBFAE9D2A4CFD2B00FD2073 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		CDBFAE9F2A4CFE9600FD2073 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		CDC7D7A72A44F439001CAAC4 /* ToDoTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTaskViewController.swift; sourceTree = "<group>"; };
+		CDE83F142A5D5DF600106D84 /* SQLiteFileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteFileCache.swift; sourceTree = "<group>"; };
+		CDE83F1F2A5F01BB00106D84 /* FileCacheCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCacheCoreData.swift; sourceTree = "<group>"; };
 		CDF6FDE42A4FA7B400BCA55B /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD02A1172A5C6B2600EE360A /* SQLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +116,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD02A1182A5C6CC400EE360A /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				CDE83F132A5D5DCF00106D84 /* CoreData */,
+				CDE83F122A5D5DC300106D84 /* SQLite */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
 		CD5260532A574E0500F4F5C2 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +159,7 @@
 		CDB57DAA2A41FD42002C7A56 /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
+				CD02A1182A5C6CC400EE360A /* Persistence */,
 				CD5260532A574E0500F4F5C2 /* Networking */,
 				CDF6FDE32A4FA77B00BCA55B /* ToDoListViewControllerDetails */,
 				CDBFAE8E2A4C6DCE00FD2073 /* Application */,
@@ -232,6 +254,25 @@
 			path = ToDoTaskViewControllerDetails;
 			sourceTree = "<group>";
 		};
+		CDE83F122A5D5DC300106D84 /* SQLite */ = {
+			isa = PBXGroup;
+			children = (
+				CDE83F142A5D5DF600106D84 /* SQLiteFileCache.swift */,
+			);
+			path = SQLite;
+			sourceTree = "<group>";
+		};
+		CDE83F132A5D5DCF00106D84 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				CDA75C812A614F7D009AA34D /* DataModel.xcdatamodeld */,
+				CDA75C882A615052009AA34D /* ToDoItemCoreData+CoreDataClass.swift */,
+				CDA75C892A615052009AA34D /* ToDoItemCoreData+CoreDataProperties.swift */,
+				CDE83F1F2A5F01BB00106D84 /* FileCacheCoreData.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		CDF6FDE32A4FA77B00BCA55B /* ToDoListViewControllerDetails */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +297,9 @@
 			dependencies = (
 			);
 			name = ToDoList;
+			packageProductDependencies = (
+				CD02A1162A5C6B2600EE360A /* SQLite */,
+			);
 			productName = ToDoList;
 			productReference = CDB57DA82A41FD42002C7A56 /* ToDoList.app */;
 			productType = "com.apple.product-type.application";
@@ -328,6 +372,9 @@
 				Base,
 			);
 			mainGroup = CDB57D9F2A41FD41002C7A56;
+			packageReferences = (
+				CD02A1152A5C6B2600EE360A /* XCRemoteSwiftPackageReference "SQLite.swift" */,
+			);
 			productRefGroup = CDB57DA92A41FD42002C7A56 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -371,11 +418,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDBFAE942A4C81A900FD2073 /* UIColor+Extension.swift in Sources */,
+				CDA75C832A614F7D009AA34D /* DataModel.xcdatamodeld in Sources */,
 				CDB57DB02A41FD42002C7A56 /* ToDoListViewController.swift in Sources */,
+				CDA75C8B2A615052009AA34D /* ToDoItemCoreData+CoreDataProperties.swift in Sources */,
 				CDB57DDD2A41FDC3002C7A56 /* ToDoItem.swift in Sources */,
+				CDE83F202A5F01BB00106D84 /* FileCacheCoreData.swift in Sources */,
 				CDB57DAC2A41FD42002C7A56 /* AppDelegate.swift in Sources */,
+				CDA75C8A2A615052009AA34D /* ToDoItemCoreData+CoreDataClass.swift in Sources */,
 				CDB57DE02A41FFE0002C7A56 /* FileCache.swift in Sources */,
 				CDBFAE9C2A4CE91000FD2073 /* DateFormatter+Extension.swift in Sources */,
+				CDE83F152A5D5DF600106D84 /* SQLiteFileCache.swift in Sources */,
 				CDB57DAE2A41FD42002C7A56 /* SceneDelegate.swift in Sources */,
 				CD4005D32A58E7D200EDF83C /* ServerCache.swift in Sources */,
 				CD5260572A574E7F00F4F5C2 /* NetworkingProtocol.swift in Sources */,
@@ -720,6 +772,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CD02A1152A5C6B2600EE360A /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CD02A1162A5C6B2600EE360A /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD02A1152A5C6B2600EE360A /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		CDA75C812A614F7D009AA34D /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CDA75C822A614F7D009AA34D /* DataModel.xcdatamodel */,
+			);
+			currentVersion = CDA75C822A614F7D009AA34D /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CDB57DA02A41FD41002C7A56 /* Project object */;
 }
