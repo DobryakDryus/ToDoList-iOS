@@ -32,7 +32,7 @@ extension ToDoItem {
 }
 
 public final class FileCacheCoreData {
-    
+    // MARK: - basic functions
     private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "DataModel")
         container.loadPersistentStores { storeDescription, error in
@@ -87,7 +87,9 @@ public final class FileCacheCoreData {
             print("\(error)")
         }
     }
-
+    
+    // MARK: - with star
+    
     func insertInCoreData(item: ToDoItem) {
         let newItem = ToDoItemCoreData(context: persistentContainer.viewContext)
         newItem.id = item.id

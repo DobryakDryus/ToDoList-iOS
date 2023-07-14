@@ -15,7 +15,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         view.backgroundColor = UIColor.backiOSPrimary
             
         setUpLayoutListView()
-        connectToSQLiteDB()
+        connectToDB()
         //loadFileCacheFromServer()
     }
 
@@ -55,12 +55,11 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             self.fileCache.addItemToList(item: newItem)
             cellTable.setComplete()
             
-            //CoreData PART
-//            self.coreData.saveToCoreData(list: self.fileCache.listToDoItem)
-            self.coreData.updateInCoreData(item: newItem)
+            // CoreData PART
+//            self.coreData.updateInCoreData(item: newItem)
             
             //SQLite PART
-//            self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: newItem)
+            self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: newItem)
             
             //self.changeItemOnServer(with: newItem)
             self.updateCompleteLabel()
@@ -102,11 +101,10 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             //self.deleteFromServer(with: cellTable.item.id)
             
             // CoreData PART
-            self.coreData.deleteFromCoreData(itemID: cellTable.item.id)
-            //self.coreData.saveToCoreData(list: self.fileCache.listToDoItem)
+            //self.coreData.deleteFromCoreData(itemID: cellTable.item.id)
             
             // SQLite PART
-//            self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: cellTable.item.id)
+            self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: cellTable.item.id)
             
             tableView.reloadData()
             completion(true)
@@ -173,14 +171,15 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     private var isShowDone = true
     private var isDirty = false
     
-    private func connectToSQLiteDB() {
+    private func connectToDB() {
         
         // CoreDataPart
-        fileCache.newList(list: coreData.loadFromCoreData())
+//        fileCache.newList(list: coreData.loadFromCoreData())
     
         // SQLite PART
-//        self.dbConnection = self.fileCache.createDataBaseSQL()
-//        self.fileCache.loadListFromSQLiteDB(dbConnection: dbConnection)
+        self.dbConnection = self.fileCache.createDataBaseSQL()
+        self.fileCache.loadListFromSQLiteDB(dbConnection: dbConnection)
+        
         updateCompleteLabel()
         self.tableListView.reloadData()
     }
@@ -424,22 +423,25 @@ extension ToDoListViewController: ToDoItemViewControllerDelegate {
     // MARK: - toDoItem delegate functions
     
     func didUpdateItem(_ item: ToDoItem) {
-        let toChange = self.fileCache.isOldElement(item: item)
+//        let toChange = self.fileCache.isOldElement(item: item)
         self.fileCache.addItemToList(item: item)
         
         // CoreData PART
-        if toChange {
-            self.coreData.updateInCoreData(item: item)
-//                    changeItemOnServer(with: item)
-        } else {
-            self.coreData.insertInCoreData(item: item)
-//                    addItemToServer(with: item)
-        }
+//        if toChange {
+//            self.coreData.updateInCoreData(item: item)
+//        } else {
+//            self.coreData.insertInCoreData(item: item)
+//        }
         
-        //self.coreData.saveToCoreData(list: fileCache.listToDoItem)
+        // Network Homework
+//        if toChange {
+//                    changeItemOnServer(with: item)
+//        } else {
+//                    addItemToServer(with: item)
+//        }
         
         // SQLite PART
-        //self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: item)
+        self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: item)
         
 
         self.tableListView.reloadData()
@@ -449,11 +451,11 @@ extension ToDoListViewController: ToDoItemViewControllerDelegate {
         self.fileCache.removeFromList(id: id)
         
         // CoreData PART
-        self.coreData.deleteFromCoreData(itemID: id)
+//        self.coreData.deleteFromCoreData(itemID: id)
         //self.coreData.saveToCoreData(list: fileCache.listToDoItem)
         
         // SQLite PART
-        //self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: id)
+        self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: id)
         
         //deleteFromServer(with: id)
         updateCompleteLabel()

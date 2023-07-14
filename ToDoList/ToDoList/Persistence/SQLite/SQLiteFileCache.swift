@@ -135,6 +135,48 @@ extension FileCache {
     }
     // MARK: - task with star
     
+    func insertItemInSQLite(dbConnection: Connection?, item: ToDoItem) {
+        guard let db = dbConnection else {
+            print("Unable to connect to database")
+            return
+        }
+        
+        let insert = FileCache.todoitem.insert(DBFields.id <- item.id,
+                                               DBFields.text <- item.text,
+                                               DBFields.importance <- item.importance.rawValue,
+                                               DBFields.deadline <- item.deadline != nil ? Int(item.deadline?.timeIntervalSince1970 ?? 0) : nil,
+                                               DBFields.completeStatus <- item.completeStatus,
+                                               DBFields.createdAt <- Int(item.createdAt.timeIntervalSince1970),
+                                               DBFields.changedAt <- item.changedAt != nil ? Int(item.changedAt?.timeIntervalSince1970 ?? 0) : nil
+                                               )
+        do {
+            try db.run(insert)
+        } catch {
+            print("Cannot insert item in database")
+        }
+    }
+    
+    func updateItemInSQLite(dbConnection: Connection?, item: ToDoItem) {
+        guard let db = dbConnection else {
+            print("Unable to connect to database")
+            return
+        }
+        
+        let toUpdate = FileCache.todoitem.filter( DBFields.id == item.id)
+        let update = toUpdate.update( DBFields.text <- item.text,
+                                       DBFields.importance <- item.importance.rawValue,
+                                       DBFields.deadline <- item.deadline != nil ? Int(item.deadline?.timeIntervalSince1970 ?? 0) : nil,
+                                       DBFields.completeStatus <- item.completeStatus,
+                                       DBFields.createdAt <- Int(item.createdAt.timeIntervalSince1970),
+                                       DBFields.changedAt <- item.changedAt != nil ? Int(item.changedAt?.timeIntervalSince1970 ?? 0) : nil
+                                       )
+        do {
+            try db.run(update)
+        } catch {
+            print("Cannot update item in database \(error)")
+        }
+    }
+    
     /// Function that inserts a row or update on conflict ID
     func upsertItemInSQLite(dbConnection: Connection?, item: ToDoItem) {
         guard let db = dbConnection else {
