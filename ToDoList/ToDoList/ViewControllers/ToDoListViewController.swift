@@ -55,7 +55,12 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             self.fileCache.addItemToList(item: newItem)
             cellTable.setComplete()
             
-            self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: newItem)
+            //CoreData PART
+//            self.coreData.saveToCoreData(list: self.fileCache.listToDoItem)
+            self.coreData.updateInCoreData(item: newItem)
+            
+            //SQLite PART
+//            self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: newItem)
             
             //self.changeItemOnServer(with: newItem)
             self.updateCompleteLabel()
@@ -95,7 +100,13 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
             self.fileCache.removeFromList(id: cellTable.item.id)
             self.updateCompleteLabel()
             //self.deleteFromServer(with: cellTable.item.id)
-            self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: cellTable.item.id)
+            
+            // CoreData PART
+            self.coreData.deleteFromCoreData(itemID: cellTable.item.id)
+            //self.coreData.saveToCoreData(list: self.fileCache.listToDoItem)
+            
+            // SQLite PART
+//            self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: cellTable.item.id)
             
             tableView.reloadData()
             completion(true)
@@ -155,14 +166,21 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     
     private var dbConnection = try? Connection()
     
+    private var coreData = FileCacheCoreData()
+    
     private var fileCache = FileCache(list: [])
     
     private var isShowDone = true
     private var isDirty = false
     
     private func connectToSQLiteDB() {
-        self.dbConnection = self.fileCache.createDataBaseSQL()
-        self.fileCache.loadListFromSQLiteDB(dbConnection: dbConnection)
+        
+        // CoreDataPart
+        fileCache.newList(list: coreData.loadFromCoreData())
+    
+        // SQLite PART
+//        self.dbConnection = self.fileCache.createDataBaseSQL()
+//        self.fileCache.loadListFromSQLiteDB(dbConnection: dbConnection)
         updateCompleteLabel()
         self.tableListView.reloadData()
     }
@@ -406,23 +424,37 @@ extension ToDoListViewController: ToDoItemViewControllerDelegate {
     // MARK: - toDoItem delegate functions
     
     func didUpdateItem(_ item: ToDoItem) {
-        //let toChange = self.fileCache.isOldElement(item: item)
+        let toChange = self.fileCache.isOldElement(item: item)
         self.fileCache.addItemToList(item: item)
         
-        self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: item)
-        //        Homework 5-6 with Server
-        //        if toChange {
-        //            changeItemOnServer(with: item)
-        //        } else {
-        //            addItemToServer(with: item)
-        //        }
+        // CoreData PART
+        if toChange {
+            self.coreData.updateInCoreData(item: item)
+//                    changeItemOnServer(with: item)
+        } else {
+            self.coreData.insertInCoreData(item: item)
+//                    addItemToServer(with: item)
+        }
+        
+        //self.coreData.saveToCoreData(list: fileCache.listToDoItem)
+        
+        // SQLite PART
+        //self.fileCache.upsertItemInSQLite(dbConnection: self.dbConnection, item: item)
+        
+
         self.tableListView.reloadData()
     }
     
     func didDeleteItem(_ id: String) {
         self.fileCache.removeFromList(id: id)
         
-        self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: id)
+        // CoreData PART
+        self.coreData.deleteFromCoreData(itemID: id)
+        //self.coreData.saveToCoreData(list: fileCache.listToDoItem)
+        
+        // SQLite PART
+        //self.fileCache.deleteItemInSQLite(dbConnection: self.dbConnection, id: id)
+        
         //deleteFromServer(with: id)
         updateCompleteLabel()
         self.tableListView.reloadData()

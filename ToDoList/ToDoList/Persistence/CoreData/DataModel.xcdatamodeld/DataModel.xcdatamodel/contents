@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G730" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ToDoItemCoreData" representedClassName="ToDoItemCoreData" syncable="YES">
+        <attribute name="changedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="completeStatus" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deadline" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="String"/>
+        <attribute name="importance" attributeType="String"/>
+        <attribute name="text" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="ToDoItemCoreData" positionX="-63" positionY="-18" width="128" height="134"/>
+    </elements>
+</model>
