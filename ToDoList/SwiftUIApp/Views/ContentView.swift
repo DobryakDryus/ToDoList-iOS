@@ -16,6 +16,7 @@ struct ContentView: View {
         self.fileCache.listToDoItem.filter { $0.completeStatus}.count
     }
     
+    @State var isToDoItemPresented = false
     
     var body: some View {
         ZStack {
@@ -46,15 +47,14 @@ struct ContentView: View {
                                 Image("PinIcon")
                                 
                             }.tint(.red)
-                            Button(action: { print("lol") }) {
+                            Button(action: { isToDoItemPresented = true }) {
                                 Image("InfoIcon")
                             }
                         }
                     }
                 }
-                
                 .listRowSeparator(.visible, edges: .all)
-    
+                
             } header: {
                 HStack {
                     Text("Выполнено — \(completeCount)")
@@ -69,7 +69,7 @@ struct ContentView: View {
                 .padding(.bottom, 4)
                 
             } footer: {
-                Button {} label : {
+                Button { isToDoItemPresented = true } label : {
                 Text("Новое")
                     .foregroundColor(Color(UIColor.tertiaryLabel))
                     .padding(.leading, 36)
@@ -81,10 +81,12 @@ struct ContentView: View {
         }
             VStack {
                 Spacer()
-                Button{} label : {
+                Button{ isToDoItemPresented = true } label : {
                     Image("PlusButton")
                         .padding()
-                    }
+                }.sheet(isPresented: $isToDoItemPresented) {
+                    ToDoItemView(item: nil)
+                }
             }
         }
     }

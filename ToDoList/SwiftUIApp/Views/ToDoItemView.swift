@@ -16,6 +16,7 @@ struct ToDoItemView: View {
     var countLines: Int {
         return text.filter{$0 == "\n"}.count
     }
+    var item: ToDoItem?
     
     var body: some View {
         NavigationView {
