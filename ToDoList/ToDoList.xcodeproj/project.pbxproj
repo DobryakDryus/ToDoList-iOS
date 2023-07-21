@@ -12,6 +12,7 @@
 		CD0273502A685565004B6F95 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAE932A4C81A900FD2073 /* UIColor+Extension.swift */; };
 		CD0273512A685565004B6F95 /* DateFormatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAE9B2A4CE91000FD2073 /* DateFormatter+Extension.swift */; };
 		CD02A1172A5C6B2600EE360A /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = CD02A1162A5C6B2600EE360A /* SQLite */; };
+		CD02EA002A695A900054F1F0 /* ToDoItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD02E9FF2A695A8F0054F1F0 /* ToDoItemView.swift */; };
 		CD4005D12A58E7B200EDF83C /* ServerToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D02A58E7B200EDF83C /* ServerToDoItem.swift */; };
 		CD4005D32A58E7D200EDF83C /* ServerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D22A58E7D200EDF83C /* ServerCache.swift */; };
 		CD4005D52A58FDE100EDF83C /* URLSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4005D42A58FDE100EDF83C /* URLSession+Extension.swift */; };
@@ -68,6 +69,7 @@
 /* Begin PBXFileReference section */
 		CD02734C2A684CD6004B6F95 /* ItemToDo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemToDo.swift; sourceTree = "<group>"; };
 		CD02734E2A684D08004B6F95 /* CacheFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFile.swift; sourceTree = "<group>"; };
+		CD02E9FF2A695A8F0054F1F0 /* ToDoItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemView.swift; sourceTree = "<group>"; };
 		CD4005D02A58E7B200EDF83C /* ServerToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerToDoItem.swift; sourceTree = "<group>"; };
 		CD4005D22A58E7D200EDF83C /* ServerCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCache.swift; sourceTree = "<group>"; };
 		CD4005D42A58FDE100EDF83C /* URLSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Extension.swift"; sourceTree = "<group>"; };
@@ -149,15 +151,48 @@
 			path = Persistence;
 			sourceTree = "<group>";
 		};
+		CD02EA012A695AA00054F1F0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CD02734C2A684CD6004B6F95 /* ItemToDo.swift */,
+				CD02734E2A684D08004B6F95 /* CacheFile.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CD02EA022A695ABC0054F1F0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CD490E662A66DCC800432B80 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CD02EA032A695AD40054F1F0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CD02E9FF2A695A8F0054F1F0 /* ToDoItemView.swift */,
+				CD490E642A66DCC200432B80 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CD02EA042A695AF00054F1F0 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				CD490E622A66DCC200432B80 /* SwiftUIAppApp.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
 		CD490E612A66DCC200432B80 /* SwiftUIApp */ = {
 			isa = PBXGroup;
 			children = (
-				CD02734E2A684D08004B6F95 /* CacheFile.swift */,
-				CD02734C2A684CD6004B6F95 /* ItemToDo.swift */,
+				CD02EA042A695AF00054F1F0 /* Application */,
+				CD02EA032A695AD40054F1F0 /* Views */,
+				CD02EA022A695ABC0054F1F0 /* Resources */,
+				CD02EA012A695AA00054F1F0 /* Models */,
 				CD490E6E2A66DEF700432B80 /* CellListView.swift */,
-				CD490E622A66DCC200432B80 /* SwiftUIAppApp.swift */,
-				CD490E642A66DCC200432B80 /* ContentView.swift */,
-				CD490E662A66DCC800432B80 /* Assets.xcassets */,
 				CD490E682A66DCC800432B80 /* Preview Content */,
 			);
 			path = SwiftUIApp;
@@ -500,6 +535,7 @@
 				CD490E6F2A66DEF700432B80 /* CellListView.swift in Sources */,
 				CD490E652A66DCC200432B80 /* ContentView.swift in Sources */,
 				CD02734D2A684CD6004B6F95 /* ItemToDo.swift in Sources */,
+				CD02EA002A695A900054F1F0 /* ToDoItemView.swift in Sources */,
 				CD02734F2A684D08004B6F95 /* CacheFile.swift in Sources */,
 				CD490E632A66DCC200432B80 /* SwiftUIAppApp.swift in Sources */,
 			);
